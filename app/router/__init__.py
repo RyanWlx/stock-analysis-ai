@@ -1,0 +1,7 @@
+from app.router import login_router, demo_router
+
+# 定义路由列表
+RegisterRouterList = [
+    login_router,
+    demo_router
+]
