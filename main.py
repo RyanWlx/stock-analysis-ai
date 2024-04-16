@@ -11,12 +11,12 @@ app = FastAPI()
 def connectdb(sql):
     # 建立Mysql数据库连接
     db = pymysql.connect(
-        host='localhost',  # 数据库地址 可远程，可本地
+        host='rm-uf62xspc9k7yy9kw9zo.mysql.rds.aliyuncs.com',  # 数据库地址 可远程，可本地
         port=3306,  # 数据库端口号
-        user='root',  # 用户名
-        passwd='wlx123',  # 密码
-        db='aiStock',  # 需要连接的数据库
-        charset='utf8'  # 配置编码
+        user='soosoo_dev',  # 用户名
+        passwd='Initial11',  # 密码
+        db='stock_int',  # 需要连接的数据库
+        charset='utf8mb4'  # 配置编码
     )
     cursor = db.cursor()
     sqls = sql  # 查询历史数据
