@@ -5,7 +5,7 @@ from fastapi import APIRouter
 router = APIRouter(tags=["login_router"])
 
 
-@router.post("/reset-password/")
+@router.post("/login/reset-password/")
 def reset_password(session: Any, body: NewPassword) -> Message:
     """
     Reset password

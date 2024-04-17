@@ -83,7 +83,7 @@ class Item(BaseModel):
     tags: list[str] = []
 
 
-@router.get("/")
+@router.get("/demo/")
 async def read_root():
     """
     项目信息
