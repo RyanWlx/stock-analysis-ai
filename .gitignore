@@ -338,3 +338,4 @@ cython_debug/
 /.idea/sqldialects.xml
 /.idea/stockAnalysisAI.iml
 /.idea/vcs.xml
+/.idea/jupyter-settings.xml
