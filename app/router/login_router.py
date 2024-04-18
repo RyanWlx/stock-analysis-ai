@@ -1,11 +1,10 @@
 from typing import Any
-from app.models.models import Message, NewPassword
 from fastapi import APIRouter
 
 router = APIRouter(tags=["login_router"])
 
 
-@router.post("/login/reset-password/")
+@router.post("/user/login/")
 def reset_password(session: Any, body: NewPassword) -> Message:
     """
     Reset password
