@@ -1,15 +1,9 @@
 # user接口传输对象
-from sqlalchemy import String
+from pydantic import BaseModel
 
 
-class UserDTO:
-    mobile: String
-    nickname: String
-    password: String
-    valid_code: String
-
-    def __init__(self, mobile: String, nickname: String, password: String, valid_code: String):
-        self.mobile = mobile
-        self.nickname = nickname
-        self.password = password
-        self.valid_code = valid_code
+class UserDTO(BaseModel):
+    mobile: str
+    nickname: str
+    password: str
+    valid_code: str

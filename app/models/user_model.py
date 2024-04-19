@@ -32,7 +32,7 @@ class User(Base):
 class Sms(Base):
 	__tablename__ = 'tb_sms_record'
 
-	id = Column(UUID, primary_key=True, index=True)
+	id = Column(UUID, primary_key=True, index=True, default=uuid.uuid4)
 	mobile = Column(String(50), unique=True, index=True)
 	function_code = Column(Integer, default=1)
 	valid_code = Column(String(6))
@@ -51,7 +51,10 @@ class Sms(Base):
 class Query(Base):
 	__tablename__ = 'tb_query_record'
 
+	id = Column(UUID, primary_key=True, index=True, default=uuid.uuid4)
 
 # 数据表tb_order_record映射对象
 class Order(Base):
 	__tablename__ = 'tb_order_record'
+
+	id = Column(UUID, primary_key=True, index=True, default=uuid.uuid4)
