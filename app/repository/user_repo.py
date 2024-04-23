@@ -4,21 +4,21 @@ from sqlalchemy import Integer, String, DateTime, Boolean, UUID, Float
 
 
 # 根据手机号查询用户信息
-def get_user_by_mobile(session: SessionLocal, mobile: String) -> user:
+def get_user_by_mobile( mobile: String) -> user:
     """
     根据手机号查询用户信息
     """
-    return session.query(user).filter(user.mobile == mobile).first()
+    return SessionLocal.query(user).filter(user.mobile == mobile).first()
 
 
 # 保存用户信息
-def save_user(session: SessionLocal, userinfo: user) -> user:
+def save_user( userinfo: user) -> user:
     """
     保存用户信息
     """
-    session.add(userinfo)
-    session.commit()
-    session.refresh(userinfo)
+    SessionLocal.add(userinfo)
+    SessionLocal.commit()
+    SessionLocal.refresh(userinfo)
     return userinfo
 
 
