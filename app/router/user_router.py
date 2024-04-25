@@ -5,6 +5,7 @@ from app.parameter.response import myResponse
 from app.models.user_model import User
 import app.utils.valid as valid
 import app.repository.user_repo as userRepo
+from typing import Optional
 
 router = APIRouter(tags=["user_router"])
 @router.get("/user/getUserInfoByPhone")
@@ -16,7 +17,7 @@ async def getUserInfo(mobile: str):
     return myResponse.resp_200(data = {'username':userInfo.username})
 
 @router.put("/user/")
-def register_user(userDto: userApiRequest.UserDTO | None = None):
+def register_user(userDto: Optional[userApiRequest.UserDTO] = None):
     """
     用户注册
     """
