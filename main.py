@@ -4,7 +4,7 @@ from app.router import RegisterRouterList
 
 
 # 实例化
-app = FastAPI(docs_url="/docs", redoc_url=None)
+app = FastAPI()
 # 加载路由
 for item in RegisterRouterList:
     app.include_router(item.router)
