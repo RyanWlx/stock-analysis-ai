@@ -1,10 +1,21 @@
 import uvicorn
 from fastapi import FastAPI
 from app.router import RegisterRouterList
-
+from fastapi.middleware.cors import CORSMiddleware
 
 # 实例化
 app = FastAPI()
+# 跨域配置
+origins = {
+    "http://127.0.0.1"
+}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET","POST","PUT","DELETE"],
+    allow_headers=["*"],
+)
 # 加载路由
 for item in RegisterRouterList:
     app.include_router(item.router)
