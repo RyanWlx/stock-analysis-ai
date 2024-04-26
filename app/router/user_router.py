@@ -1,5 +1,7 @@
 from typing import Any
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
+from pydantic import BaseModel
+
 from app.parameter.request import userApiRequest
 from app.parameter.response import myResponse
 from app.models.user_model import User
@@ -8,10 +10,14 @@ import app.repository.user_repo as userRepo
 from typing import Optional
 
 router = APIRouter(tags=["user_router"])
+
+class Item(BaseModel):
+    phone: str
+
 @router.post("/user/getUserInfoByPhone")
-async def getUserInfo(phone: str):
+async def getUserInfo(item: Item):
     # 1.2 查询用户是否存在 - 根据手机号查询用户信息
-    userInfo = userRepo.get_user_by_mobile( phone)
+    userInfo = userRepo.get_user_by_mobile( item.phone)
     if userInfo is not None:
         return myResponse.resp_400(message="用户已存在")
     return myResponse.resp_200(data = {'username':userInfo.username})
