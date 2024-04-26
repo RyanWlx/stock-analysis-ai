@@ -9,9 +9,9 @@ from typing import Optional
 
 router = APIRouter(tags=["user_router"])
 @router.post("/user/getUserInfoByPhone")
-async def getUserInfo(mobile: str):
+async def getUserInfo(phone: str):
     # 1.2 查询用户是否存在 - 根据手机号查询用户信息
-    userInfo = userRepo.get_user_by_mobile( mobile)
+    userInfo = userRepo.get_user_by_mobile( phone)
     if userInfo is not None:
         return myResponse.resp_400(message="用户已存在")
     return myResponse.resp_200(data = {'username':userInfo.username})
