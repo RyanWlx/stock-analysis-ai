@@ -8,7 +8,7 @@ import app.repository.user_repo as userRepo
 from typing import Optional
 
 router = APIRouter(tags=["user_router"])
-@router.get("/user/getUserInfoByPhone")
+@router.post("/user/getUserInfoByPhone")
 async def getUserInfo(mobile: str):
     # 1.2 查询用户是否存在 - 根据手机号查询用户信息
     userInfo = userRepo.get_user_by_mobile( mobile)
