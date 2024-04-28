@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 # 跨域配置
 origins = {
-    "http://47.113.111.219:8888"
+    "http://47.113.111.219"
 }
 app.add_middleware(
     CORSMiddleware,
