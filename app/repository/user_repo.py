@@ -8,7 +8,8 @@ def get_user_by_mobile( mobile: String) -> user:
     """
     根据手机号查询用户信息
     """
-    return SessionLocal.query(user).filter(user.mobile == mobile).first()
+    Session = SessionLocal()
+    return Session.query(user).filter(user.mobile == mobile).first()
 
 
 # 保存用户信息

@@ -19,8 +19,8 @@ async def getUserInfo(item: Item):
     # 1.2 查询用户是否存在 - 根据手机号查询用户信息
     userInfo = userRepo.get_user_by_mobile( item.phone)
     if userInfo is not None:
-        return myResponse.resp_400(message="用户已存在")
-    return myResponse.resp_200(data = {'username':userInfo.username})
+        return myResponse.resp_200(data = {'username':userInfo.username})
+    return myResponse.resp_200(message="用户不存在",data='')
 
 @router.put("/user/")
 def register_user(userDto: Optional[userApiRequest.UserDTO] = None):
