@@ -1,7 +1,9 @@
 from typing import Any
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
+from app.dependencies.db_depend import get_db
 from app.parameter.request import userApiRequest
 from app.parameter.response import myResponse
 from app.models.user_model import User
@@ -15,15 +17,15 @@ class Item(BaseModel):
     phone: str
 
 @router.post("/user/getUserInfoByPhone")
-async def getUserInfo(item: Item):
+async def getUserInfo(item: Item, db: Session = Depends(get_db)):
     # 1.2 查询用户是否存在 - 根据手机号查询用户信息
-    userInfo = userRepo.get_user_by_mobile( item.phone)
+    userInfo = userRepo.get_user_by_mobile(item.phone, db)
     if userInfo is not None:
         return myResponse.resp_200(data = {'username':userInfo.username})
     return myResponse.resp_200(message="用户不存在",data='')
 
 @router.put("/user/")
-def register_user(userDto: Optional[userApiRequest.UserDTO] = None):
+def register_user(userDto: Optional[userApiRequest.UserDTO] = None, db: Session = Depends(get_db)):
     """
     用户注册
     """
@@ -39,11 +41,11 @@ def register_user(userDto: Optional[userApiRequest.UserDTO] = None):
     # 1.1 校验手机号和验证码 - 验证码是否正确
 
     # 1.2 查询用户是否存在 - 根据手机号查询用户信息
-    userInfo = userRepo.get_user_by_mobile( userDto.mobile)
+    userInfo = userRepo.get_user_by_mobile(userDto.mobile, db)
     if userInfo is not None:
         return myResponse.resp_400(message="用户已存在")
     # 2. 生成用户信息
-    userRepo.save_user( User(mobile=userDto.mobile, nickname=userDto.nickname, password=userDto.password))
+    userRepo.save_user(User(mobile=userDto.mobile, nickname=userDto.nickname, password=userDto.password), db)
 
     # 2.1 生成密码(加密)
     # 3. 保存用户信息
