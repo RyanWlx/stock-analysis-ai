@@ -1,6 +1,7 @@
 from sqlalchemy import BigInteger, Column, DECIMAL, DateTime, Index, Integer, String, Table, text
 from sqlalchemy.dialects.mysql import TINYINT, VARCHAR
 from sqlalchemy.orm import declarative_base
+import uuid
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -130,7 +131,7 @@ class TbSmsRecord(Base):
     __tablename__ = 'tb_sms_record'
     __table_args__ = {'comment': '短信记录'}
 
-    id = Column(String(32), primary_key=True, comment='id')
+    id = Column(String(32), primary_key=True, comment='id', default=uuid.uuid4)
     function_code = Column(Integer, nullable=False, server_default=text("'1'"), comment='功能码(1-登录 2-重置密码)')
     valid_status = Column(Integer, nullable=False, server_default=text("'0'"), comment='验证码状态(0-失效 1-有效)')
     valid_duration = Column(Integer, nullable=False, server_default=text("'600'"), comment='有效周期(秒)')
@@ -188,7 +189,7 @@ class TbUser(Base):
     __tablename__ = 'tb_user'
     __table_args__ = {'comment': '用户'}
 
-    id = Column(String(32), primary_key=True, comment='id')
+    id = Column(String(32), primary_key=True, comment='id', default=uuid.uuid4)
     password = Column(String(20), nullable=False, comment='密码')
     mobile = Column(String(20), comment='手机号')
     nickname = Column(String(50), comment='昵称')
