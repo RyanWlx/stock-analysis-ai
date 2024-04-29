@@ -1,6 +1,6 @@
 from app.dependencies.db_depend import get_db
 from app.models.user_model import User as user
-from sqlalchemy import Integer, String, DateTime, Boolean, UUID, Float
+from sqlalchemy import String
 from sqlalchemy.orm import Session
 from fastapi import Depends
 
