@@ -1,7 +1,8 @@
 fastapi==0.110.2
-pydantic==1.10.12
-SQLAlchemy==1.4.52
+pydantic==2.7.1
+SQLAlchemy==2.0.29
 uvicorn==0.29.0
-numpy
-tushare
-pandas
+numpy==1.26.4
+tushare==1.4.6
+pandas==2.2.2
+PyMySQL==1.1.0
