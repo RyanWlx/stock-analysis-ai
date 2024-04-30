@@ -6,7 +6,7 @@ from sqlalchemy import String, Integer
 class QutationDTO(BaseModel):
 	type: str='D'  # D 日线 W 周线 M 月线
 	ts_code: str
-	trade_date: str | None=None
+	trade_date: str
 	start_date: str
 	end_date: str
 	offset: int=0
