@@ -51,7 +51,7 @@ exec_status(){
     FLAG=`ps -ef | grep $BASE_PATH/$PY_FILE | grep -v grep | wc -l`
 
     if [[ ! -z ${FLAG} ]]; then
-        PS_PID=`ps -ef | grep java | grep $BASE_PATH/$PY_FILE | grep -v grep | awk '{print $2}'`
+        PS_PID=`ps -ef | grep python | grep $BASE_PATH/$PY_FILE | grep -v grep | awk '{print $2}'`
     else
         PS_PID=0
     fi
@@ -93,8 +93,6 @@ exec_status(){
 
     fi
 }
-
-
 # 启动
 exec_start(){
     echo_blue "----执行 start 方法----"
