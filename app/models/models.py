@@ -143,46 +143,47 @@ class TbSmsRecord(Base):
     updated_time = Column(DateTime, comment='修改时间')
 
 
-t_tb_stk_factor = Table(
-    'tb_stk_factor', metadata,
-    Column('ts_code', String(90), comment='股票代码'),
-    Column('trade_date', DateTime, comment='交易日期'),
-    Column('open', DECIMAL(24, 6), comment='开盘价'),
-    Column('high', DECIMAL(24, 6), comment='最高价'),
-    Column('low', DECIMAL(24, 6), comment='最低价'),
-    Column('close', DECIMAL(24, 6), comment='收盘价'),
-    Column('pre_close', DECIMAL(24, 6), comment='昨收价'),
-    Column('change', DECIMAL(24, 6), comment='涨跌额'),
-    Column('pct_change', DECIMAL(24, 6), comment='涨跌幅(未复权)'),
-    Column('vol', DECIMAL(24, 6), comment='成交量(手)'),
-    Column('amount', DECIMAL(24, 6), comment='成交额(千元)'),
-    Column('adj_factor', DECIMAL(24, 6), comment='复权因子'),
-    Column('open_hfq', DECIMAL(24, 6), comment='开盘价后复权'),
-    Column('open_qfq', DECIMAL(24, 6), comment='开盘价前复权'),
-    Column('close_hfq', DECIMAL(24, 6), comment='收盘价后复权'),
-    Column('close_qfq', DECIMAL(24, 6), comment='收盘价前复权'),
-    Column('high_hfq', DECIMAL(24, 6), comment='最高价后复权'),
-    Column('high_qfq', DECIMAL(24, 6), comment='最高价前复权'),
-    Column('low_hfq', DECIMAL(24, 6), comment='最低价后复权'),
-    Column('low_qfq', DECIMAL(24, 6), comment='最低价前复权'),
-    Column('pre_close_hfq', DECIMAL(24, 6), comment='昨收价后复权'),
-    Column('pre_close_qfq', DECIMAL(24, 6), comment='昨收价前复权'),
-    Column('macd_dif', DECIMAL(24, 6), comment='macd_dif(基于前复权价格计算)'),
-    Column('macd_dea', DECIMAL(24, 6), comment='macd_dea'),
-    Column('macd', DECIMAL(24, 6), comment='macd'),
-    Column('kdj_k', DECIMAL(24, 6), comment='kdj_k'),
-    Column('kdj_d', DECIMAL(24, 6), comment='kdj_d'),
-    Column('kdj_j', DECIMAL(24, 6), comment='kdj_j'),
-    Column('rsi_6', DECIMAL(24, 6), comment='rsi_6'),
-    Column('rsi_12', DECIMAL(24, 6), comment='rsi_12'),
-    Column('rsi_24', DECIMAL(24, 6), comment='rsi_24'),
-    Column('boll_upper', DECIMAL(24, 6), comment='boll_upper'),
-    Column('boll_mid', DECIMAL(24, 6), comment='boll_mid'),
-    Column('boll_lower', DECIMAL(24, 6), comment='boll_lower'),
-    Column('cci', DECIMAL(24, 6), comment='cci'),
-    Index('idx_ts_date', 'ts_code', 'trade_date', unique=True),
-    comment='量化因子'
-)
+class TbStkFactor(Base):
+    __tablename__ = 'tb_stk_factor'
+    __table_args__ = (
+        {'comment': '股票量化因子'}
+    )
+
+    ts_code = Column('ts_code', String(90), primary_key=True, comment='股票代码')
+    trade_date = Column('trade_date', DateTime, primary_key=True, comment='交易日期')
+    open = Column('open', DECIMAL(24, 6), comment='开盘价')
+    high = Column('high', DECIMAL(24, 6), comment='最高价')
+    low = Column('low', DECIMAL(24, 6), comment='最低价')
+    close = Column('close', DECIMAL(24, 6), comment='收盘价')
+    pre_close = Column('pre_close', DECIMAL(24, 6), comment='昨收价')
+    change = Column('change', DECIMAL(24, 6), comment='涨跌额')
+    pct_change = Column('pct_change', DECIMAL(24, 6), comment='涨跌幅(未复权)')
+    vol = Column('vol', DECIMAL(24, 6), comment='成交量(手)')
+    amount = Column('amount', DECIMAL(24, 6), comment='成交额(千元)')
+    adj_factor = Column('adj_factor', DECIMAL(24, 6), comment='复权因子')
+    open_hfq = Column('open_hfq', DECIMAL(24, 6), comment='开盘价后复权')
+    open_qfq = Column('open_qfq', DECIMAL(24, 6), comment='开盘价前复权')
+    close_hfq = Column('close_hfq', DECIMAL(24, 6), comment='收盘价后复权')
+    close_qfq = Column('close_qfq', DECIMAL(24, 6), comment='收盘价前复权')
+    high_hfq = Column('high_hfq', DECIMAL(24, 6), comment='最高价后复权')
+    high_qfq = Column('high_qfq', DECIMAL(24, 6), comment='最高价前复权')
+    low_hfq = Column('low_hfq', DECIMAL(24, 6), comment='最低价后复权')
+    low_qfq = Column('low_qfq', DECIMAL(24, 6), comment='最低价前复权')
+    pre_close_hfq = Column('pre_close_hfq', DECIMAL(24, 6), comment='昨收价后复权')
+    pre_close_qfq = Column('pre_close_qfq', DECIMAL(24, 6), comment='昨收价前复权')
+    macd_dif = Column('macd_dif', DECIMAL(24, 6), comment='macd_dif(基于前复权价格计算)')
+    macd_dea = Column('macd_dea', DECIMAL(24, 6), comment='macd_dea')
+    macd = Column('macd', DECIMAL(24, 6), comment='macd')
+    kdj_k = Column('kdj_k', DECIMAL(24, 6), comment='kdj_k')
+    kdj_d = Column('kdj_d', DECIMAL(24, 6), comment='kdj_d')
+    kdj_j = Column('kdj_j', DECIMAL(24, 6), comment='kdj_j')
+    rsi_6 = Column('rsi_6', DECIMAL(24, 6), comment='rsi_6')
+    rsi_12 = Column('rsi_12', DECIMAL(24, 6), comment='rsi_12')
+    rsi_24 = Column('rsi_24', DECIMAL(24, 6), comment='rsi_24')
+    boll_upper = Column('boll_upper', DECIMAL(24, 6), comment='boll_upper')
+    boll_mid = Column('boll_mid', DECIMAL(24, 6), comment='boll_mid')
+    boll_lower = Column('boll_lower', DECIMAL(24, 6), comment='boll_lower')
+    cci = Column('cci', DECIMAL(24, 6), comment='cci')
 
 
 class TbUser(Base):

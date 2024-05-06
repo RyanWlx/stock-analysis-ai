@@ -19,4 +19,15 @@ async def getStockQuoteByType(qutationRequeat: QutationDTO, db: Session = Depend
 		return myResponse.resp_200(data = np.array(df).tolist(), message="获取成功")
 	return myResponse.resp_200(message="行情数据不存在",data='')
 
+@router.post("/stock/getStockFactor")
+async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get_db)):
+	#获取股票行情数据
+	df = stockService.get_stk_factor(qutationRequeat.ts_code, qutationRequeat.start_date, qutationRequeat.end_date)
+	print(df)
+	if df is not None:
+		dataArray = np.array(df).tolist()
+		stockService.save_stk_factor(qutationRequeat.type, dataArray, db)
+		return myResponse.resp_200(data = np.array(df).tolist(), message="获取成功")
+	return myResponse.resp_200(message="行情数据不存在",data='')
+
 
