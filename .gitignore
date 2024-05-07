@@ -339,3 +339,4 @@ cython_debug/
 /.idea/stockAnalysisAI.iml
 /.idea/vcs.xml
 /.idea/jupyter-settings.xml
+/logs/**

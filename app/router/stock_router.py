@@ -5,6 +5,7 @@ from app.parameter.response import myResponse
 import numpy as np
 from app.dependencies.db_depend import get_db
 from sqlalchemy.orm import Session
+from app.config.log_config import logger
 
 router = APIRouter(tags=["stock_router"])
 
@@ -12,9 +13,9 @@ router = APIRouter(tags=["stock_router"])
 async def getStockQuoteByType(qutationRequeat: QutationDTO, db: Session = Depends(get_db)):
 	#获取股票行情数据
 	df = stockService.get_qutation(qutationRequeat.type, qutationRequeat.ts_code, qutationRequeat.start_date, qutationRequeat.end_date)
-	print(df)
 	if df is not None:
 		dataArray = np.array(df).tolist()
+		logger.info("数据获取成功: {}", dataArray)
 		stockService.save_qutation(qutationRequeat.type, dataArray, db)
 		return myResponse.resp_200(data = np.array(df).tolist(), message="获取成功")
 	return myResponse.resp_200(message="行情数据不存在",data='')
