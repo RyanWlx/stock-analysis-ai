@@ -221,3 +221,16 @@ class TbWeekly(Base):
     pct_change = Column(DECIMAL(24, 6), comment='涨跌幅(未复权)')
     vol = Column(DECIMAL(24, 6), comment='成交量(手)')
     amount = Column(DECIMAL(24, 6), comment='成交额(千元)')
+
+class TbCyqChips(Base):
+    __tablename__ = 'tb_cyq_chips'
+    __table_args__ = (
+        {'comment': '每日的筹码分布情况'}
+    )
+
+    ts_code = Column('ts_code', String(90), primary_key=True, comment='股票代码')
+    trade_date = Column('trade_date', DateTime, primary_key=True, comment='交易日期')
+    price = Column('price', DECIMAL(24, 6), comment='成本价格')
+    percent = Column('percent', DECIMAL(24, 6), comment='价格占比（%）')
+
+
