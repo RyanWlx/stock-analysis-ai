@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+from typing import Union
+
 from app.service import stock_service as stockService
 from fastapi import APIRouter, Depends
 from app.parameter.request.qutationRequest import QutationDTO
@@ -16,7 +20,7 @@ async def getStockQuoteByType(qutationRequeat: QutationDTO, db: Session = Depend
 	if df is not None:
 		dataArray = np.array(df).tolist()
 		logger.info("数据获取成功: {}", dataArray)
-		stockService.save_qutation(qutationRequeat.type, dataArray, db)
+		# stockService.save_qutation(qutationRequeat.type, dataArray, db)
 		return myResponse.resp_200(data = np.array(df).tolist(), message="获取成功")
 	return myResponse.resp_200(message="行情数据不存在",data='')
 
@@ -29,6 +33,25 @@ async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get
 		dataArray = np.array(df).tolist()
 		stockService.save_stk_factor(qutationRequeat.type, dataArray, db)
 		return myResponse.resp_200(data = np.array(df).tolist(), message="获取成功")
+	return myResponse.resp_200(message="行情数据不存在",data='')
+
+@router.get("/history")
+async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: Union[str, None] = None, to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
+	#获取股票行情数据
+	df = stockService.get_qutation(resolution, symbol, from_, to)
+	if df is not None:
+		dataArray = {
+			"s": "ok",
+			"t": np.array(df['trade_date']).tolist(),
+			"c": np.array(df['close']).tolist(),
+			"o": np.array(df['open']).tolist(),
+			"h": np.array(df['high']).tolist(),
+			"l": np.array(df['low']).tolist(),
+			"v": np.array(df['vol']).tolist()
+		}
+		logger.info("数据获取成功: {}", dataArray)
+		# stockService.save_qutation(qutationRequeat.type, dataArray, db)
+		return myResponse.resp_200(data = dataArray, message="获取成功")
 	return myResponse.resp_200(message="行情数据不存在",data='')
 
 

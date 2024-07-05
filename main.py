@@ -1,7 +1,8 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from app.router import RegisterRouterList
 from fastapi.middleware.cors import CORSMiddleware
+from app.service.job_service import run_job
 
 # 实例化
 app = FastAPI()
@@ -22,4 +23,6 @@ for item in RegisterRouterList:
 
 # 启动uvicorn服务，默认端口8000
 if __name__ == '__main__':
+    # backgroud = BackgroundTasks()
+    # backgroud.add_task(run_job)
     uvicorn.run("main:app", port=8000, reload=True)
