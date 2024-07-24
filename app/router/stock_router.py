@@ -54,4 +54,29 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: Union[str
 		return myResponse.resp_200(data = dataArray, message="获取成功")
 	return myResponse.resp_200(message="行情数据不存在",data='')
 
+@router.get("/config")
+async def getChartConfig():
+	#获取图标配置数据
+	returnData = {
+		"supports_search": True,
+		"supports_group_request": False,
+		"supported_resolutions": ["1D", "1W", "1M"],
+		"supports_marks": False,
+		"supports_time": True
+	}
+	logger.info("数据获取成功: {}", returnData)
+	return myResponse.resp_200(message="数据获取成功",data=returnData)
+
+@router.get("/symbols")
+async def getChartConfig(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
+	#获取图标配置数据
+	returnData = {
+		"supports_search": True,
+		"supports_group_request": False,
+		"supported_resolutions": ["1D", "1W", "1M"],
+		"supports_marks": False,
+		"supports_time": True
+	}
+	logger.info("数据获取成功: {}", returnData)
+	return myResponse.resp_200(message="数据获取成功",data=returnData)
 
