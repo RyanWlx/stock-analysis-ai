@@ -80,3 +80,29 @@ async def getChartConfig(symbol: Union[str, None] = None, db: Session = Depends(
 	logger.info("数据获取成功: {}", returnData)
 	return myResponse.resp_200(message="数据获取成功",data=returnData)
 
+@router.get("/symbol_info")
+async def getSymbolInfo(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
+	#获取图标配置数据
+	returnData = {
+		"supports_search": True,
+		"supports_group_request": False,
+		"supported_resolutions": ["1D", "1W", "1M"],
+		"supports_marks": False,
+		"supports_time": True
+	}
+	logger.info("数据获取成功: {}", returnData)
+	return myResponse.resp_200(message="数据获取成功",data=returnData)
+
+
+@router.get("/search")
+async def search(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
+	#获取图标配置数据
+	returnData = {
+		"supports_search": True,
+		"supports_group_request": False,
+		"supported_resolutions": ["1D", "1W", "1M"],
+		"supports_marks": False,
+		"supports_time": True
+	}
+	logger.info("数据获取成功: {}", returnData)
+	return myResponse.resp_200(message="数据获取成功",data=returnData)
