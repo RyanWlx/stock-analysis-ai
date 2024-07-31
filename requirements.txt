@@ -11,3 +11,4 @@ oss2==2.18.6
 docxtpl==0.17.0
 loguru==0.7.2
 scikit-learn==1.2.2
+apscheduler==3.9.0
