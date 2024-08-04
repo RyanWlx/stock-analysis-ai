@@ -79,4 +79,8 @@ async def getChartConfig(symbol: Union[str, None] = None, db: Session = Depends(
 	}
 	logger.info("数据获取成功: {}", returnData)
 	return myResponse.resp_200(message="数据获取成功",data=returnData)
+@router.get("/time")
+async def getStockQuoteHistory():
+	return myResponse.resp_200(message="获取成功",data='')
+
 
