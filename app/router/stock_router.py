@@ -58,7 +58,7 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: Union[str
 async def getChartConfig():
 	#获取图标配置数据
 	returnData = {
-		"supports_search": False,
+		"supports_search": True,
 		"supports_group_request": True,
 		"supported_resolutions": ["1D", "1W", "1M"],
 		"supports_marks": True,
