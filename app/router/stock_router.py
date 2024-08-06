@@ -59,9 +59,9 @@ async def getChartConfig():
 	#获取图标配置数据
 	returnData = {
 		"supports_search": True,
-		"supports_group_request": True,
-		"supported_resolutions": ["1D", "1W", "1M"],
-		"supports_marks": True,
+		"supports_group_request": False,
+		"supported_resolutions": ["1","5","15","30","60","1D", "1W", "1M"],
+		"supports_marks": False,
 		"supports_time": True
 	}
 	logger.info("数据获取成功: {}", returnData)
