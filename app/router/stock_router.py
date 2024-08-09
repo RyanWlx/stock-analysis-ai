@@ -120,6 +120,7 @@ async def getChartConfig():
 			"value": "index"
 		  }
 		]
+
 	}
 	logger.info("数据获取成功: {}", returnData)
 	return myResponse.resp_tdview_200(message="数据获取成功",data=returnData)
