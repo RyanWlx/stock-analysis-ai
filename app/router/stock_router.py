@@ -58,14 +58,71 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: Union[str
 async def getChartConfig():
 	#获取图标配置数据
 	returnData = {
-		"supports_search": True,
-		"supports_group_request": True,
-		"supported_resolutions": ["1D", "1W", "1M"],
+		"supported_resolutions": ["D","2D","3D","W","3W","M","6M"],
+		"supports_group_request": False,
 		"supports_marks": True,
-		"supports_time": True
+		"supports_search": True,
+		"supports_time": True,
+		"supports_timescale_marks": True,
+		"exchanges": [
+			{
+				"value": "",
+				"name": "All Exchanges",
+				"desc": ""
+			},
+			{
+				"value": "NasdaqNM",
+				"name": "NasdaqNM",
+				"desc": "NasdaqNM"
+			},
+			{
+				"value": "NYSE",
+				"name": "NYSE",
+				"desc": "NYSE"
+			},
+			{
+				"value": "NCM",
+				"name": "NCM",
+				"desc": "NCM"
+			},
+			{
+				"value": "NGM",
+				"name": "NGM",
+				"desc": "NGM"
+			},
+			# {
+			# 	"value": "SH",
+			# 	"name": "上海证券交易所",
+			# 	"desc": "SH"
+			# },
+			# {
+			# 	"value": "SZ",
+			# 	"name": "深圳证券交易所",
+			# 	"desc": "SZ"
+			# },
+			# {
+			# 	"value": "BJ",
+			# 	"name": "北京证券交易所",
+			# 	"desc": "BJ"
+			# },
+		],
+		"symbols_types": [
+		  {
+			"name": "All types",
+			"value": ""
+		  },
+		  {
+			"name": "Stock",
+			"value": "stock"
+		  },
+		  {
+			"name": "Index",
+			"value": "index"
+		  }
+		]
 	}
 	logger.info("数据获取成功: {}", returnData)
-	return myResponse.resp_200(message="数据获取成功",data=returnData)
+	return myResponse.resp_tdview_200(message="数据获取成功",data=returnData)
 
 @router.get("/symbols")
 async def getChartConfig(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
