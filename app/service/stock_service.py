@@ -6,7 +6,7 @@ def get_qutation(type: str, ts_code: str, start_date: str, end_date: str, offset
 	"""
 	获取行情信息
 	"""
-	if type == 'D':
+	if type == '1D':
 		df = pro.daily(**{
 			"ts_code": ts_code,
 			"start_date": start_date,
