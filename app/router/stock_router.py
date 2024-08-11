@@ -10,7 +10,7 @@ import numpy as np
 from app.dependencies.db_depend import get_db
 from sqlalchemy.orm import Session
 from app.config.log_config import logger
-from datetime import datetime
+import app.repository.stock_repo as stockRepo
 
 router = APIRouter(tags=["stock_router"])
 
@@ -41,27 +41,34 @@ async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get
 async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: Union[str, None] = None, to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
 	#获取股票行情数据
 
-	# from_ = datetime.fromtimestamp(int(from_))
-	# to = datetime.fromtimestamp(int(to))
-	from_ = '2010-01-04 00:00:00'
-	to = '2010-05-04 00:00:00'
-	df = stockService.get_qutation(resolution, symbol+'.SZ', from_, to)
-	print("qutationRequeat===>", symbol)
-	print("from_====>", from_,to,df)
-	if df is not None:
-		dataArray = {
-			"s": "ok",
-			"t": np.array(df['trade_date']).tolist(),
-			"c": np.array(df['close']).tolist(),
-			"o": np.array(df['open']).tolist(),
-			"h": np.array(df['high']).tolist(),
-			"l": np.array(df['low']).tolist(),
-			"v": np.array(df['vol']).tolist()
-		}
-		logger.info("数据获取成功: {}", dataArray)
-		# stockService.save_qutation(qutationRequeat.type, dataArray, db)
+	dataArray = stockRepo.get_history(symbol, from_, to, db)
+
+	if dataArray is not None:
 		return myResponse.resp_tdview_200(data = dataArray, message="获取成功")
-	return myResponse.resp_tdview_200(message="行情数据不存在",data='')
+	return myResponse.resp_tdview_200(message="不存在", data='')
+
+
+# from_ = datetime.fromtimestamp(int(from_))
+	# to = datetime.fromtimestamp(int(to))
+	# from_ = '2010-01-04 00:00:00'
+	# to = '2010-05-04 00:00:00'
+	# df = stockService.get_qutation(resolution, symbol+'.SZ', from_, to)
+	# print("qutationRequeat===>", symbol)
+	# print("from_====>", from_,to,df)
+	# if df is not None:
+	# 	dataArray = {
+	# 		"s": "ok",
+	# 		"t": np.array(df['trade_date']).tolist(),
+	# 		"c": np.array(df['close']).tolist(),
+	# 		"o": np.array(df['open']).tolist(),
+	# 		"h": np.array(df['high']).tolist(),
+	# 		"l": np.array(df['low']).tolist(),
+	# 		"v": np.array(df['vol']).tolist()
+	# 	}
+	# 	logger.info("数据获取成功: {}", dataArray)
+	# 	# stockService.save_qutation(qutationRequeat.type, dataArray, db)
+	# 	return myResponse.resp_tdview_200(data = dataArray, message="获取成功")
+	# return myResponse.resp_tdview_200(message="行情数据不存在",data='')
 
 @router.get("/config")
 async def getChartConfig():
