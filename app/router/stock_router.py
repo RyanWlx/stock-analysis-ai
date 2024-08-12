@@ -40,7 +40,8 @@ async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get
 @router.get("/history")
 async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: Union[str, None] = None, to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
 	#获取股票行情数据
-
+	from_ = datetime.fromtimestamp(int(from_))
+	to = datetime.fromtimestamp(int(to))
 	dataArray = stockRepo.get_history(symbol, from_, to, db)
 
 	if dataArray is not None:

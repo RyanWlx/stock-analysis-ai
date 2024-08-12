@@ -39,11 +39,9 @@ def get_history(symbol, from_, to, db: Session) -> Daliy:
     """
 
 	# print("99999====>",symbol,from_,to)
-
-    return db.query(Daliy).filter(
-		and_(
-			Daliy.ts_code == symbol,
-			Daliy.trade_date > from_,
-			Daliy.trade_date < to,
-		)
-	).all()
+	# and_(
+	# 	Daliy.ts_code == symbol + '.SZ',
+	# 	Daliy.trade_date > from_,
+	# 	Daliy.trade_date < to,
+	# )
+    return db.query(Daliy).filter(Daliy.ts_code == symbol + '.SZ').filter(Daliy.trade_date > from_).filter(Daliy.trade_date < to).all()
