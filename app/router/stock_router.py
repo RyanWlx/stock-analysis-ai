@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from typing import Union
 
+from app.models.stock_model import DaliyEncoder
 from app.service import stock_service as stockService
 from fastapi import APIRouter, Depends, Query
 from app.parameter.request.qutationRequest import QutationDTO
@@ -45,6 +46,7 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Quer
 	dataArray = stockRepo.get_history(symbol, from_, to, db)
 
 	if dataArray is not None:
+		dataArray = json.dumps(dataArray, cls=DaliyEncoder)
 		return myResponse.resp_tdview_200(data = dataArray, message="获取成功")
 	return myResponse.resp_tdview_200(message="不存在", data='')
 

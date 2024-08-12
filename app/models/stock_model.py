@@ -3,6 +3,7 @@ from sqlalchemy import BigInteger, Column, DECIMAL, DateTime, Index, Integer, St
 from datetime import datetime
 from app.config.db_config import Base
 import uuid
+import json
 
 
 # 数据表tb_query_record映射对象
@@ -24,6 +25,9 @@ class Daliy(Base):
     def __repr__(self):
         return f'<Daliy {self.ts_code, self.trade_date}>'
 
+class DaliyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        return obj.__dict__
 
 # 数据表tb_order_record映射对象
 # class Weekly(Base):
