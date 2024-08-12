@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Union
 
 from app.service import stock_service as stockService
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from app.parameter.request.qutationRequest import QutationDTO
 from app.parameter.response import myResponse
 import numpy as np
@@ -38,13 +38,13 @@ async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get
 	return myResponse.resp_200(message="行情数据不存在",data='')
 
 @router.get("/history")
-async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: Union[str, None] = None, to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
+async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Query(None, alias="from"), to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
 	#获取股票行情数据
 
 	dataArray = stockRepo.get_history(symbol, from_, to, db)
 
 	if dataArray is not None:
-		return myResponse.resp_tdview_200(data = dataArray, message="获取成功")
+		return myResponse.resp_200(data = dataArray[0], message="获取成功")
 	return myResponse.resp_tdview_200(message="不存在", data='')
 
 
