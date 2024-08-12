@@ -44,10 +44,9 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Quer
 	from_ = datetime.fromtimestamp(int(from_))
 	to = datetime.fromtimestamp(int(to))
 	dataArray = stockRepo.get_history(symbol, from_, to, db)
-
+	data = []
 	if dataArray is not None:
-		dataArray = json.dumps(dataArray, cls=DaliyEncoder)
-		return myResponse.resp_tdview_200(data = dataArray, message="获取成功")
+		return myResponse.resp_tdview_200(data = data, message="获取成功")
 	return myResponse.resp_tdview_200(message="不存在", data='')
 
 

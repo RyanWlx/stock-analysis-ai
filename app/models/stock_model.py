@@ -25,6 +25,22 @@ class Daliy(Base):
     def __repr__(self):
         return f'<Daliy {self.ts_code, self.trade_date}>'
 
+class DaliyDTO():
+    ts_code: str
+    trade_dat: str
+    open: DECIMAL(24, 6)
+    high: DECIMAL(24, 6)
+    low: DECIMAL(24, 6)
+    close: DECIMAL(24, 6)
+    pre_close: DECIMAL(24, 6)
+    change: DECIMAL(24, 6)
+    pct_change: DECIMAL(24, 6)
+    vol: DECIMAL(24, 6)
+    amount: DECIMAL(24, 6)
+
+    def __repr__(self):
+        return f'<Daliy {self.ts_code, self.trade_date}>'
+
 class DaliyEncoder(json.JSONEncoder):
     def default(self, obj):
         return obj.__dict__
