@@ -36,7 +36,7 @@ def save_weekly(monthly: TbMonthly, db: Session) -> TbMonthly:
 	db.refresh(monthly)
 	return monthly
 
-def get_history(symbol, from_, to, db: Session) -> daliy:
+def get_history(symbol, from_, to, resolution, db: Session) -> daliy:
     """
     history
     """

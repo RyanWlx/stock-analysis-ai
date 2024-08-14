@@ -9,7 +9,10 @@ import json
 # 数据表tb_query_record映射对象
 class Daliy(Base):
     __tablename__ = 'tb_daliy'
-
+    __table_args__ = (
+        Index('idx_ts_date', 'ts_code', 'trade_date', unique=True),
+        {'comment': '日线行情'}
+    )
     ts_code = Column(String(90), primary_key=True, nullable=False, comment='股票代码')
     trade_date = Column(DateTime, primary_key=True, nullable=False, comment='交易日期')
     open = Column(DECIMAL(24, 6), comment='开盘价')

@@ -40,10 +40,13 @@ def resp_tdview_200(*, data: Union[list, dict, str], message: str):
     *：代表调用方法时必须传参数
     Union：代表传入的参数可以是多种类型
     '''
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=data
-    )
+    return data
+
+
+    # return JSONResponse(
+    #     status_code=status.HTTP_200_OK,
+    #     content=data
+    # )
 
 def resp_400(*, data: str, message='Bad Request!'):
     '''

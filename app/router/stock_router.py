@@ -43,35 +43,41 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Quer
 	#获取股票行情数据
 	from_ = datetime.fromtimestamp(int(from_))
 	to = datetime.fromtimestamp(int(to))
-	dataArray = stockRepo.get_history(symbol, from_, to, db)
+	dbData = stockRepo.get_history(symbol, from_, to,resolution, db)
+	print("history-dbData====>",dbData)
+	print("history-type====>",type(dbData))
+	# print("history-value====>", dbData['trade_date'])
+	if dbData is not None:
+		# dataArray = json.loads(dataArray, cls=DaliyEncoder)
+		t = []
+		h = []
+		c = []
+		o = []
+		l = []
+		v = []
 
-	if dataArray is not None:
-		dataArray = json.dumps(dataArray, cls=DaliyEncoder)
-		return myResponse.resp_tdview_200(data = dataArray, message="获取成功")
+		for element in dbData:
+			print(element)
+			t.append(int(element.trade_date.timestamp()))
+			h.append(element.high)
+			c.append(element.close)
+			o.append(element.open)
+			l.append(element.low)
+			v.append(element.vol)
+
+		_data = {
+			"t": t,
+			"c": c,
+			"o": o,
+			"h": h,
+			"l": l,
+			"v": v,
+			"s": 'ok'
+		}
+		print("history-_data====>", h)
+		logger.info("数据获取成功: {}", dbData, _data)
+		return myResponse.resp_tdview_200(data = _data, message="获取成功")
 	return myResponse.resp_tdview_200(message="不存在", data='')
-
-
-# from_ = datetime.fromtimestamp(int(from_))
-	# to = datetime.fromtimestamp(int(to))
-	# from_ = '2010-01-04 00:00:00'
-	# to = '2010-05-04 00:00:00'
-	# df = stockService.get_qutation(resolution, symbol+'.SZ', from_, to)
-	# print("qutationRequeat===>", symbol)
-	# print("from_====>", from_,to,df)
-	# if df is not None:
-	# 	dataArray = {
-	# 		"s": "ok",
-	# 		"t": np.array(df['trade_date']).tolist(),
-	# 		"c": np.array(df['close']).tolist(),
-	# 		"o": np.array(df['open']).tolist(),
-	# 		"h": np.array(df['high']).tolist(),
-	# 		"l": np.array(df['low']).tolist(),
-	# 		"v": np.array(df['vol']).tolist()
-	# 	}
-	# 	logger.info("数据获取成功: {}", dataArray)
-	# 	# stockService.save_qutation(qutationRequeat.type, dataArray, db)
-	# 	return myResponse.resp_tdview_200(data = dataArray, message="获取成功")
-	# return myResponse.resp_tdview_200(message="行情数据不存在",data='')
 
 @router.get("/config")
 async def getChartConfig():
