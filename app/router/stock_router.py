@@ -48,14 +48,12 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Quer
 	print("history-type====>",type(dbData))
 	# print("history-value====>", dbData['trade_date'])
 	if dbData is not None:
-		# dataArray = json.loads(dataArray, cls=DaliyEncoder)
 		t = []
 		h = []
 		c = []
 		o = []
 		l = []
 		v = []
-
 		for element in dbData:
 			print(element)
 			t.append(int(element.trade_date.timestamp()))
