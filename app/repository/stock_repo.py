@@ -2,6 +2,7 @@
 from sqlalchemy import and_
 from app.models.models import TbDaliy
 from app.models.stock_model import Daliy as daliy
+from app.models.stock_model import Secumain as secumain
 from app.models.models import TbWeekly
 from app.models.models import TbMonthly
 from sqlalchemy.orm import Session
@@ -49,4 +50,16 @@ def get_history(symbol, from_, to, resolution, db: Session) -> daliy:
 	# 	Daliy.trade_date < to,
 	# )
     return db.query(daliy).filter(daliy.ts_code == symbol + '.SZ').filter(daliy.trade_date > from_).filter(daliy.trade_date < to).all()
+
+def get_search(query, type, exchange, limit, db: Session) -> secumain:
+    """
+    search
+    """
+
+    return db.query(secumain).filter(
+		or_(
+			secumain.secu_code.like('%'+query+'%'),
+			secumain.secu_abbr.like('%'+query+'%'),
+		)
+	).limit(limit).all()
 

@@ -204,14 +204,21 @@ async def getStockQuoteHistory():
 
 
 @router.get("/search")
-async def search(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
-	#获取图标配置数据
-	returnData = {
-		"supports_search": True,
-		"supports_group_request": False,
-		"supported_resolutions": ["1D", "1W", "1M"],
-		"supports_marks": False,
-		"supports_time": True
-	}
-	logger.info("数据获取成功: {}", returnData)
-	return myResponse.resp_200(message="数据获取成功",data=returnData)
+async def search(query: str, type: str, exchange: str, limit: Union[str, None],db: Session = Depends(get_db)):
+	dbData = stockRepo.get_search(query, type, exchange, limit, db)
+	if dbData is not None:
+		_list = [];
+		for element in dbData:
+			_dict = {}
+			_dict['description'] = ''
+			_dict['exchange'] = element.suffix
+			_dict['symbol'] = element.secu_code
+			_dict['exchange_logo'] = ''
+			_dict['full_name'] = element.secu_abbr
+			_dict['type'] = 'stock'
+			_dict['logo_urls'] = ['']
+			_list.append(_dict)
+		# logger.info("数据获取成功: {}", dbData)
+		print("search-_data====>", _list)
+		return myResponse.resp_tdview_200(data=_list, message="获取成功")
+	return myResponse.resp_tdview_200(message="不存在", data=[])
