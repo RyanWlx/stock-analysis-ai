@@ -149,29 +149,33 @@ async def getChartConfig():
 	return myResponse.resp_tdview_200(message="数据获取成功",data=returnData)
 
 @router.get("/symbols")
-async def getChartConfig(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
-	#获取图标配置数据
-	returnData = {
-		"name": "002049",
-		"exchange-traded": "SH",
-		"exchange-listed": "SH",
-		"timezone": "Asia/Shanghai",
-		"minmov": 1,
-		"minmov2": 0,
-		"pointvalue": 1,
-		"session": "0930-1630",
-		"has_intraday": False,
-		"visible_plots_set": "ohlcv",
-		"description": "紫光国微",
-		"type": "stock",
-		"supported_resolutions": ["D", "2D", "3D", "W", "3W", "M", "6M"],
-		"pricescale": 100,
-		"ticker": "002049",
-		"logo_urls": ["https://s3-symbol-logo.tradingview.com/apple.svg"],
-		"exchange_logo": "https://s3-symbol-logo.tradingview.com/country/US.svg"
-	}
-	logger.info("数据获取成功: {}", returnData)
-	return myResponse.resp_tdview_200(message="数据获取成功", data=returnData)
+async def getSymbol(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
+	#商品解析
+	# 如果您的datafeed配置supports_group_request：false和supports_search：true，则将执行此调用。
+	# symbol: string. 商品名称或者代码.
+
+	dbData = stockRepo.get_symbol(symbol, db)
+	if dbData is not None:
+		for element in dbData:
+			_dict = {}
+			_dict['description'] = ''
+			_dict['exchange-listed'] = element.suffix
+			_dict['exchange-traded'] = element.suffix
+			_dict['exchange_logo'] = ''
+			_dict['has_intraday'] = False
+			_dict['minmov'] = 1
+			_dict['minmov2'] = 0
+			_dict['name'] = element.secu_code
+			_dict['pointvalue'] = 1
+			_dict['pricescale'] = 100
+			_dict['session'] = "0930-1500"
+			_dict['supported_resolutions'] = ["D", "2D", "3D", "W", "3W", "M", "6M"]
+			_dict['ticker'] = element.secu_code
+			_dict['timezone'] = 'Asia/Shanghai'
+			_dict['type'] = 'stock'
+			_dict['visible_plots_set'] = 'ohlcv'
+	logger.info("数据获取成功: {}", _dict)
+	return myResponse.resp_tdview_200(message="数据获取成功", data=_dict)
 
 @router.get("/symbol_info")
 async def getSymbolInfo(symbol: Union[str, None] = None, db: Session = Depends(get_db)):

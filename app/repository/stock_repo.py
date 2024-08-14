@@ -63,3 +63,14 @@ def get_search(query, type, exchange, limit, db: Session) -> secumain:
 		)
 	).limit(limit).all()
 
+def get_symbol(symbol, db: Session) -> secumain:
+    """
+    search
+    """
+
+    return db.query(secumain).filter(
+		or_(
+			secumain.secu_code == symbol,
+			secumain.secu_abbr == symbol,
+		)
+	).limit(1).all()
