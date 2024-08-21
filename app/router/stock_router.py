@@ -150,7 +150,7 @@ async def getChartConfig():
 
 @router.get("/symbols")
 async def getSymbol(symbol: Union[str, None] = None, db: Session = Depends(get_db)):
-	#商品解析
+	#商品解析 Request:GET /symbols?symbol=<symbol>
 	# 如果您的datafeed配置supports_group_request：false和supports_search：true，则将执行此调用。
 	# symbol: string. 商品名称或者代码.
 

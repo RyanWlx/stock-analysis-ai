@@ -44,12 +44,11 @@ def get_history(symbol, from_, to, resolution, db: Session) -> daliy:
 
 	# print("99999====>",symbol,from_,to)
 
-	# and_(
-	# 	Daliy.ts_code == symbol + '.SZ',
-	# 	Daliy.trade_date > from_,
-	# 	Daliy.trade_date < to,
-	# )
-    return db.query(daliy).filter(daliy.ts_code == symbol + '.SZ').filter(daliy.trade_date > from_).filter(daliy.trade_date < to).all()
+    return db.query(daliy).filter(or_(
+		daliy.ts_code == symbol + '.SZ',
+		daliy.ts_code == symbol + '.SH',
+		daliy.ts_code == symbol + '.BJ',
+	)).filter(daliy.trade_date > from_).filter(daliy.trade_date < to).all()
 
 def get_search(query, type, exchange, limit, db: Session) -> secumain:
     """
