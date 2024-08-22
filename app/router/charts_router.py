@@ -16,7 +16,7 @@ import app.repository.stock_repo as stockRepo
 router = APIRouter(tags=["charts_router"])
 # https://saveload.tradingview.com/1.1/charts?client=tradingview.com&user=public_user_id
 @router.post("/1.1/charts")
-async def postCharts(qutationRequeat: QutationDTO = Form(), client: Union[str, None] = None, user: Union[str, None] = None, Session = Depends(get_db)):
+async def postCharts(qutationRequeat: QutationDTO = Form(), q: str, Session = Depends(get_db)):
 	#获取股票行情数据
 	print("qutationRequeat===>",qutationRequeat)
 	# print("queryparams===>", client,user)
