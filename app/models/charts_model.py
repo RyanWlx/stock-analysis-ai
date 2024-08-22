@@ -11,7 +11,7 @@ class TbCharts(Base):
         {'comment': 'charts'}
     )
 
-    id = Column(String(32), primary_key=True, autoincrement=True, comment='id')
+    id = Column(BigInteger, primary_key=True, autoincrement=True, comment='id')
     owner_source = Column(String(200), nullable=True, comment='')
     owner_id = Column(String(200), comment='')
     name = Column(String(200), comment='')
