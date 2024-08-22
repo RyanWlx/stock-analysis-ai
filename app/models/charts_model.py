@@ -7,11 +7,11 @@ from app.config.db_config import Base
 class TbCharts(Base):
     __tablename__ = 'tb_charts'
     __table_args__ = (
-        Index('IX_ownerSource', 'ownerSource', 'ownerId'),
+        Index('IX_ownerSource', 'owner_source', 'owner_id'),
         {'comment': 'charts'}
     )
 
-    id = Column(String(32), primary_key=True, comment='id')
+    id = Column(String(32), primary_key=True, autoincrement=True, comment='id')
     owner_source = Column(String(200), nullable=True, comment='')
     owner_id = Column(String(200), comment='')
     name = Column(String(200), comment='')
@@ -21,4 +21,4 @@ class TbCharts(Base):
     content = Column(String(200), comment='')
 
     def __repr__(self):
-        return f'<Secumain {self.ownerSource, self.ownerId}>'
+        return f'<Secumain {self.owner_source, self.owner_id}>'
