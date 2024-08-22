@@ -4,7 +4,7 @@ from typing import Union
 
 from app.models.stock_model import DaliyEncoder
 from app.service import stock_service as stockService
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Form
 from app.parameter.request.qutationRequest import QutationDTO
 from app.parameter.response import myResponse
 import numpy as np
@@ -16,9 +16,11 @@ import app.repository.stock_repo as stockRepo
 router = APIRouter(tags=["charts_router"])
 # https://saveload.tradingview.com/1.1/charts?client=tradingview.com&user=public_user_id
 @router.post("/1.1/charts")
-async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get_db)):
+async def postCharts(qutationRequeat: QutationDTO = Form(), client: Union[str, None] = None, user: Union[str, None] = None, Session = Depends(get_db)):
 	#获取股票行情数据
 	print("qutationRequeat===>",qutationRequeat)
+	# print("queryparams===>", client,user)
+	return myResponse.resp_200(message="charts不存在",data='')
 	df = stockService.get_stk_factor(qutationRequeat.ts_code+'.SZ', qutationRequeat.start_date, qutationRequeat.end_date)
 	print(df)
 	if df is not None:
