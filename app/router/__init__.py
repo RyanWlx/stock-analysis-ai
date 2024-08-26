@@ -1,4 +1,4 @@
-from app.router import login_router, user_router, stock_router, charts_router
+from app.router import login_router, user_router, stock_router, charts_router, study_tempate_router
 
 # 定义路由列表
 RegisterRouterList = [
@@ -6,4 +6,5 @@ RegisterRouterList = [
     user_router,
     stock_router,
     charts_router,
+    study_tempate_router,
 ]
