@@ -102,7 +102,7 @@ async def deleteCharts(client: Union[str|None] = Query(), user: Union[str|None] 
 	if not chartData:
 		return myResponse.resp_400(message="图标id不存在", data={'status': 'error'})
 	else:
-		myChart = chartRepo.delete_charts(chart, Session)
+		myChart = chartRepo.delete_charts(chartData, Session)
 		returnDeleteData = {
 			'status': 'ok'
 		}
