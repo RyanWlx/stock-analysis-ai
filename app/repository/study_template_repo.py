@@ -4,7 +4,7 @@ from sqlalchemy import String, Integer, BigInteger
 from sqlalchemy import create_engine, and_, or_
 
 
-def get_templates_by_user(client: String, user: String, template: String, id: BigInteger, db: Session) -> StudyTemplate:
+def get_templates_by_user(client: String, user: String, db: Session) -> StudyTemplate:
     """
     根据client,user获取name
     """
@@ -13,9 +13,9 @@ def get_templates_by_user(client: String, user: String, template: String, id: Bi
             StudyTemplate.owner_id == user,
             StudyTemplate.owner_source == client,
         )
-    )
+    ).all()
 
-def get_template_by_template(client: String, user: String, template: String, id: BigInteger, db: Session) -> StudyTemplate:
+def get_template_by_template(client: String, user: String, template: String, db: Session) -> StudyTemplate:
     """
     根据client,user,template获取content
     """
