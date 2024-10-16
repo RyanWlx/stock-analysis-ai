@@ -6,6 +6,9 @@ from app.models.stock_model import Secumain as secumain
 from app.models.models import TbWeekly
 from app.models.models import TbMonthly
 from sqlalchemy.orm import Session
+import pandas as pd
+import app.service.factor_service as fs
+from app.config.log_config import logger
 from sqlalchemy import String
 from sqlalchemy import create_engine, and_, or_
 
@@ -43,12 +46,20 @@ def get_history(symbol, from_, to, resolution, db: Session) -> daliy:
     """
 
 	# print("99999====>",symbol,from_,to)
-
-    return db.query(daliy).filter(or_(
-		daliy.ts_code == symbol + '.SZ',
-		daliy.ts_code == symbol + '.SH',
-		daliy.ts_code == symbol + '.BJ',
-	)).filter(daliy.trade_date > from_).filter(daliy.trade_date < to).all()
+    quotations = db.query(daliy).filter(or_(
+	    daliy.ts_code == symbol + '.SZ',
+	    daliy.ts_code == symbol + '.SH',
+	    daliy.ts_code == symbol + '.BJ',
+    )).filter(daliy.trade_date > from_).filter(daliy.trade_date < to).all()
+	# 检查symbol是否包含_
+    if symbol.find('_') != -1 and quotations:
+        df = pd.DataFrame(quotations)
+        xg = fs.strategy_bottom_picking(df)
+        logger.info("xg:", xg)
+	    #用xg替换quotations中的close的值
+        for i in range(len(quotations)):
+            quotations[i].close = xg[i]
+    return quotations
 
 def get_search(query, type, exchange, limit, db: Session) -> secumain:
     """
