@@ -3,8 +3,9 @@ from datetime import datetime
 import app.utils.tdxFunction as tdx
 from app.config.log_config import logger
 from pandas import DataFrame
+import numpy as np
+import pandas as pd
 from app.models.stock_model import Daliy as daliy
-from sqlalchemy.orm import Session
 
 # 指标计算服务
 
@@ -23,6 +24,7 @@ def strategy_bottom_picking(daliy: DataFrame):
     """
     logger.info("底部选股策略执行开始")
     CLOSE = daliy['close']
+    CLOSE = np.array()
     LOW = daliy['low']
     HIGH = daliy['high']
     x_1 = (CLOSE + HIGH + LOW) / 3
