@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 import pandas as pd
 import app.service.factor_service as fs
 from app.config.log_config import logger
+import json as json
 from sqlalchemy import String
 from sqlalchemy import create_engine, and_, or_
 
@@ -51,14 +52,41 @@ def get_history(symbol, from_, to, resolution, db: Session) -> daliy:
 	    daliy.ts_code == symbol + '.SH',
 	    daliy.ts_code == symbol + '.BJ',
     )).filter(daliy.trade_date > from_).filter(daliy.trade_date < to).all()
+
+    quotations_all = db.query(daliy).filter(or_(
+	    daliy.ts_code == symbol + '.SZ',
+	    daliy.ts_code == symbol + '.SH',
+	    daliy.ts_code == symbol + '.BJ',
+    )).all()
 	# 检查symbol是否包含_
-    if symbol.find('_') != -1 and quotations:
-        df = pd.DataFrame(quotations)
+    if symbol.find('_') != -1 and quotations_all:
+        quotation_list = []
+        quotation = {
+			"trade_date": "",
+			"close": 0,
+			"open": 0,
+			"high": 0,
+			"low": 0,
+			"volume": 0,
+	        "amount": 0,
+	        "ts_code": ""
+		}
+        for item in quotations:
+            quotation["close"] = item.close
+            quotation["open"] = item.open
+            quotation["high"] = item.high
+            quotation["low"] = item.low
+            quotation["volume"] = item.vol
+            quotation["trade_date"] = item.trade_date
+            quotation["amount"] = item.amount
+            quotation["ts_code"] = item.ts_code
+            quotation_list.append(quotation)
+        df = pd.DataFrame(quotation_list)
         xg = fs.strategy_bottom_picking(df)
         logger.info("xg:", xg)
 	    #用xg替换quotations中的close的值
         for i in range(len(quotations)):
-            quotations[i].close = xg[i]
+            quotations_all[i].close = xg[i]
     return quotations
 
 def get_search(query, type, exchange, limit, db: Session) -> secumain:

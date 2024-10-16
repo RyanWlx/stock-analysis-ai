@@ -1,4 +1,6 @@
+import decimal
 from datetime import datetime
+from decimal import Decimal
 
 import app.utils.tdxFunction as tdx
 from app.config.log_config import logger
@@ -8,6 +10,12 @@ import pandas as pd
 from app.models.stock_model import Daliy as daliy
 
 # 指标计算服务
+# 定义转换函数
+def float_to_decimal(value):
+    if value:
+        return Decimal(str(value))
+    else:
+        return Decimal(0)
 
 def strategy_bottom_picking(daliy: DataFrame):
     """
@@ -27,9 +35,12 @@ def strategy_bottom_picking(daliy: DataFrame):
     LOW = daliy['low']
     HIGH = daliy['high']
     x_1 = (CLOSE + HIGH + LOW) / 3
-    x_2 = (x_1-tdx.MA(x_1, 14)) / (tdx.AVEDEV(x_1, 14) * 0.015)
+    x_1_5 = pd.Series(tdx.MA(x_1, 14))
+    x_1_7 = x_1_5.apply(lambda x: Decimal.from_float(x))
+    x_1_6 = tdx.AVEDEV(x_1, 14) * 0.015
+    x_2 = (x_1-x_1_7) / x_1_6
     x_3 = tdx.CROSS(x_2, -100)
-    x_4 = (CLOSE - tdx.LLV(LOW, 9)) / (tdx.HHV(HIGH, 9) - tdx.LLV(LOW, 9)) * 100
+    x_4 = (CLOSE - Decimal.from_float(tdx.LLV(LOW, 9))) / (tdx.HHV(HIGH, 9) - tdx.LLV(LOW, 9)) * 100
     x_5 = tdx.SMA(x_4, 3,1)
     x_6 = tdx.SMA(x_5,3,1)
     x_7 = 3*x_5-2*x_6
