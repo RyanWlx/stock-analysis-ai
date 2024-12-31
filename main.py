@@ -4,14 +4,15 @@ from app.router import RegisterRouterList
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from app.service.job_service import data_save
+from app.config.log_config import logger
 
 scheduler = AsyncIOScheduler()
 
 # 定义定时任务执行器
-@scheduler.scheduled_job('interval', seconds=5, id='my_job_id')
+@scheduler.scheduled_job('interval', seconds=5, id='data_save')
 def my_job():
     # 执行数据拉取和保存逻辑
-    print("start a job")
+    logger.info("start a job")
     data_save()
 
 # 实例化
@@ -36,7 +37,7 @@ for item in RegisterRouterList:
 # 启动时执行任务
 @app.on_event('startup')
 async def on_startup():
-    print('start event!')
+    logger.info('start event!')
     scheduler.start()
 
 # 启动uvicorn服务，默认端口8000
