@@ -96,7 +96,7 @@ class TbSecumain(Base):
     __table_args__ = (
         Index('IX_SecuMain_Category', 'secu_category', 'secu_market', 'listed_state', 'listed_sector'),
         Index('IX_SecuMain_CompanyCode', 'company_code'),
-        Index('IX_SecuMain_InnerCode', 'inner_coe', unique=True),
+        Index('IX_SecuMain_InnerCode', 'inner_code', unique=True),
         Index('IX_SecuMain_JSID', 'JSID'),
         Index('IX_SecuMain_SecuCode', 'secu_code'),
         Index('PK_SecuMain', 'ID'),
