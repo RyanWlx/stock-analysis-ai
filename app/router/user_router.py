@@ -21,7 +21,7 @@ async def getUserInfo(item: Item, db: Session = Depends(get_db)):
     # 1.2 查询用户是否存在 - 根据手机号查询用户信息
     userInfo = userRepo.get_user_by_mobile(item.phone, db)
     if userInfo is not None:
-        return myResponse.resp_200(data = {'username':userInfo.username})
+        return myResponse.resp_200(data = {'username':userInfo.nickname},message="查询成功")
     return myResponse.resp_200(message="用户不存在",data='')
 
 @router.put("/user/")

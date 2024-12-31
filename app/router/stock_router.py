@@ -156,8 +156,8 @@ async def getSymbol(symbol: Union[str, None] = None, db: Session = Depends(get_d
 
 	dbData = stockRepo.get_symbol(symbol, db)
 	if dbData is not None:
+		_dict = {}
 		for element in dbData:
-			_dict = {}
 			_dict['description'] = ''
 			_dict['exchange-listed'] = element.suffix
 			_dict['exchange-traded'] = element.suffix
