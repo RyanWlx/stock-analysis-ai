@@ -7,7 +7,7 @@ from app.service.job_service import data_save
 
 scheduler = AsyncIOScheduler()
 
-# 输出时间
+# 定义定时任务执行器
 @scheduler.scheduled_job('interval', seconds=5, id='my_job_id')
 def my_job():
     # 执行数据拉取和保存逻辑
@@ -28,10 +28,12 @@ app.add_middleware(
     allow_methods=["GET","POST","PUT","DELETE","HEAD"],
     allow_headers=["*"],
 )
+
 # 加载路由
 for item in RegisterRouterList:
     app.include_router(item.router)
 
+# 启动时执行任务
 @app.on_event('startup')
 async def on_startup():
     print('start event!')
