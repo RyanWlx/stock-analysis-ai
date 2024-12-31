@@ -100,13 +100,13 @@ class TbSecumain(Base):
         Index('IX_SecuMain_JSID', 'JSID'),
         Index('IX_SecuMain_SecuCode', 'secu_code'),
         Index('PK_SecuMain', 'ID'),
-        Index('idx_InnerCode_SecuCode_SecuAbbr_Suffix', 'inner_coe', 'secu_code', 'secu_abbr', 'suffix'),
+        Index('idx_InnerCode_SecuCode_SecuAbbr_Suffix', 'inner_code', 'secu_code', 'secu_abbr', 'suffix'),
         Index('idx_secid', 'sec_id'),
         {'comment': '证券信息表'}
     )
 
     ID = Column(BigInteger, primary_key=True)
-    inner_coe = Column(Integer, comment='证券内部编码')
+    inner_code = Column(Integer, comment='证券内部编码')
     company_code = Column(Integer, comment='公司代码')
     secu_code = Column(VARCHAR(30), comment='证券代码')
     secu_abbr = Column(VARCHAR(100), comment='证券简称')
