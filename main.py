@@ -23,6 +23,7 @@ for item in RegisterRouterList:
 
 # 启动uvicorn服务，默认端口8000
 if __name__ == '__main__':
-    # backgroud = BackgroundTasks()
-    # backgroud.add_task(run_job)
+    backgroud = BackgroundTasks()
+    backgroud.add_task(run_job)
+    print("run_job====>2")
     uvicorn.run("main:app", port=8000, reload=True)
