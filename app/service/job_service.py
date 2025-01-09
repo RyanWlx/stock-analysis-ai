@@ -42,46 +42,92 @@ def getStockListFromDB( db: Session = next(get_db())):
 	print("999",np.array(df))
 	if df is not None:
 		dataArray = np.array(df).tolist()
-		ts_code_str = ''
-		for index in range(999):
-			if index == 998:
-				ts_code_str = ts_code_str + dataArray[index][0] + ''
-			else:
-				ts_code_str = ts_code_str + dataArray[index][0] + ','
-		# 对股票列表进行当天数据的拉取
-		# 调用具体方法执行
-		dto = StockClass()
-		# ts_code_str = ','.join(dataArray)
-		print('ts_code_str',ts_code_str)
-		# dto.type = 'D'
-		dto.ts_code = ts_code_str
-		# 固定15年1月1日开始
+		ts_code_str0 = ''
+		ts_code_str1 = ''
+		ts_code_str2 = ''
+		ts_code_str3 = ''
+		ts_code_str4 = ''
+		ts_code_str5 = ''
+		ts_code_str6 = ''
+
+		for index in range(len(dataArray)):
+			if index < 1000:
+				if index == 999 or index == len(dataArray) -1:
+					ts_code_str0 = ts_code_str0 + dataArray[index][0] + ''
+				else:
+					ts_code_str0 = ts_code_str0 + dataArray[index][0] + ','
+			elif 999 < index < 2000:
+				if index == 1999 or index == len(dataArray) -1:
+					ts_code_str1 = ts_code_str1 + dataArray[index][0] + ''
+				else:
+					ts_code_str1 = ts_code_str1 + dataArray[index][0] + ','
+			elif 1999 < index < 3000:
+				if index == 2999 or index == len(dataArray) -1:
+					ts_code_str2 = ts_code_str2 + dataArray[index][0] + ''
+				else:
+					ts_code_str2 = ts_code_str2 + dataArray[index][0] + ','
+			elif 2999 < index < 4000:
+				if index == 3999 or index == len(dataArray) -1:
+					ts_code_str3 = ts_code_str3 + dataArray[index][0] + ''
+				else:
+					ts_code_str3 = ts_code_str3 + dataArray[index][0] + ','
+			elif 3999 < index < 5000:
+				if index == 4999 or index == len(dataArray) -1:
+					ts_code_str4 = ts_code_str4 + dataArray[index][0] + ''
+				else:
+					ts_code_str4 = ts_code_str4 + dataArray[index][0] + ','
+			elif 4999 < index < 6000:
+				if index == 5999 or index == len(dataArray) -1:
+					ts_code_str5 = ts_code_str5 + dataArray[index][0] + ''
+				else:
+					ts_code_str5 = ts_code_str5 + dataArray[index][0] + ','
+
 		# 获取当前日期
 		current_date = datetime.now().date()
 		# 将日期格式化为YYYYMMDD
 		today_formatted = current_date.strftime('%Y%m%d')
-		print("date_format",today_formatted)
-		# 获取今天的日期
-		today = datetime.now()
-		# 获取昨天的日期
-		yesterday = today - timedelta(days=1)
-		# 转换为 YYYYMMDD 格式
-		yesterday_formatted = yesterday.strftime('%Y%m%d')
-		print("yesterday_formatted", yesterday_formatted)
-		dto.end_date = today_formatted
-		dto.start_date = yesterday_formatted
-		getStockFactorFromThreeDB(dto)
+		# 对股票列表进行当天数据的拉取
+		# 调用具体方法执行
+		dto0 = StockClass()
+		dto1 = StockClass()
+		dto2 = StockClass()
+		dto3 = StockClass()
+		dto4 = StockClass()
+		dto5 = StockClass()
+
+		if ts_code_str0 != '':
+			dto0.ts_code = ts_code_str0
+			dto0.end_date = today_formatted
+			dto0.start_date = today_formatted
+			getStockFactorFromThreeDB(dto0)
+		if ts_code_str1 != '':
+			dto1.ts_code = ts_code_str0
+			dto1.end_date = today_formatted
+			dto1.start_date = today_formatted
+			getStockFactorFromThreeDB(dto1)
+		if ts_code_str2 != '':
+			dto2.ts_code = ts_code_str0
+			dto2.end_date = today_formatted
+			dto2.start_date = today_formatted
+			getStockFactorFromThreeDB(dto2)
+		if ts_code_str3 != '':
+			dto3.ts_code = ts_code_str0
+			dto3.end_date = today_formatted
+			dto3.start_date = today_formatted
+			getStockFactorFromThreeDB(dto3)
+		if ts_code_str4 != '':
+			dto4.ts_code = ts_code_str0
+			dto4.end_date = today_formatted
+			dto4.start_date = today_formatted
+			getStockFactorFromThreeDB(dto4)
+		if ts_code_str5 != '':
+			dto5.ts_code = ts_code_str0
+			dto5.end_date = today_formatted
+			dto5.start_date = today_formatted
+			getStockFactorFromThreeDB(dto5)
 		return print("getStockListFromDB---success===>")
 	print("getStockListFromDB---error===>")
 
 def data_save():
     logger.info("保存数据至数据库")
-    # 调用具体方法执行
-    dto = StockClass()
-    # dto.type = 'D'
-    dto.ts_code = '600800.SH,300757.SZ'
-	# 固定15年1月1日开始
-    dto.end_date = '20241231'
-    dto.start_date = '20150101'
-    # getStockFactorFromThreeDB(dto)
     getStockListFromDB()
