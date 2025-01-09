@@ -9,7 +9,7 @@ from app.config.log_config import logger
 scheduler = AsyncIOScheduler()
 
 # 定义定时任务执行器
-@scheduler.scheduled_job('interval', seconds=5, id='data_save')
+@scheduler.scheduled_job('interval', seconds=10, id='data_save')
 def my_job():
     # 执行数据拉取和保存逻辑
     logger.info("start a job")
@@ -38,7 +38,8 @@ for item in RegisterRouterList:
 @app.on_event('startup')
 async def on_startup():
     logger.info('start event!')
-    scheduler.start()
+    # scheduler.start()
+    data_save()
 
 # 启动uvicorn服务，默认端口8000
 if __name__ == '__main__':

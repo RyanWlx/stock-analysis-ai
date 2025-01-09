@@ -5,7 +5,9 @@ from app.models.stock_model import Daliy as daliy
 from app.models.stock_model import Secumain as secumain
 from app.models.models import TbWeekly
 from app.models.models import TbMonthly
+from app.models.stock_model import StkFactor as stkFactor
 from sqlalchemy.orm import Session
+from sqlalchemy import select, func
 import pandas as pd
 import app.service.factor_service as fs
 from app.config.log_config import logger
@@ -112,3 +114,14 @@ def get_symbol(symbol, db: Session) -> secumain:
 			secumain.secu_abbr == symbol,
 		)
 	).limit(1).all()
+
+# 获取股票列表
+def get_stock_list_all(db: Session) -> secumain:
+    """
+    根据股票代码全称查询股票代码列表
+    """
+    stsm = (select(secumain.full_code).
+			filter(or_(secumain.suffix == '.SZ', secumain.suffix == '.SH', secumain.suffix == '.BJ')))
+
+    result = db.execute(stsm)
+    return result.all()

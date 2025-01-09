@@ -24,6 +24,7 @@ class Secumain(Base):
     )
 
     ID = Column(BigInteger, primary_key=True)
+    full_code = Column(Integer, comment='证券编码全称')
     inner_code = Column(Integer, comment='证券内部编码')
     company_code = Column(Integer, comment='公司代码')
     secu_code = Column(VARCHAR(30), comment='证券代码')
@@ -108,6 +109,8 @@ class DaliyEncoder(json.JSONEncoder):
 #     __tablename__ = 'tb_secumain'
 #
 #
-# # 数据表tb_order_record映射对象
-# class StkFactor(Base):
-#     __tablename__ = 'tb_stk_factor'
+# 数据表tb_stk_factor映射对象
+class StkFactor():
+    __tablename__ = 'tb_secumain'
+
+    ts_code: str

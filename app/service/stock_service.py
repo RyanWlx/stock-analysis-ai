@@ -68,8 +68,9 @@ def get_qutation(type: str, ts_code: str, start_date: str, end_date: str, offset
 		])
 	return df
 
-def get_stk_factor(ts_code: str, start_date: str, end_date: str, offset: int=0, limit: int=1000):
+def get_stk_factor(ts_code: str, start_date: str, end_date: str, offset: int=0, limit: int=10000):
 
+	print('ts_code===>',ts_code,start_date,end_date)
 	# 拉取数据
 	df = pro.stk_factor(**{
 		"ts_code": ts_code,
