@@ -1,3 +1,5 @@
+import time
+
 from app.config.log_config import logger
 import app.router.stock_router as stock_router
 from app.service import stock_service as stockService
@@ -96,35 +98,46 @@ def getStockListFromDB( db: Session = next(get_db())):
 		dto5 = StockClass()
 
 		if ts_code_str0 != '':
+			print('走到了第0秒')
 			dto0.ts_code = ts_code_str0
 			dto0.end_date = today_formatted
 			dto0.start_date = today_formatted
-			getStockFactorFromThreeDB(dto0)
+			# getStockFactorFromThreeDB(dto0)
 		if ts_code_str1 != '':
+			time.sleep(1)
+			print('走到了第1秒')
 			dto1.ts_code = ts_code_str0
 			dto1.end_date = today_formatted
 			dto1.start_date = today_formatted
-			getStockFactorFromThreeDB(dto1)
+			# getStockFactorFromThreeDB(dto1)
 		if ts_code_str2 != '':
+			time.sleep(1)
+			print('走到了第2秒')
 			dto2.ts_code = ts_code_str0
 			dto2.end_date = today_formatted
 			dto2.start_date = today_formatted
-			getStockFactorFromThreeDB(dto2)
+			# getStockFactorFromThreeDB(dto2)
 		if ts_code_str3 != '':
+			time.sleep(1)
+			print('走到了第3秒')
 			dto3.ts_code = ts_code_str0
 			dto3.end_date = today_formatted
 			dto3.start_date = today_formatted
-			getStockFactorFromThreeDB(dto3)
+			# getStockFactorFromThreeDB(dto3)
 		if ts_code_str4 != '':
+			time.sleep(1)
+			print('走到了第4秒')
 			dto4.ts_code = ts_code_str0
 			dto4.end_date = today_formatted
 			dto4.start_date = today_formatted
-			getStockFactorFromThreeDB(dto4)
+			# getStockFactorFromThreeDB(dto4)
 		if ts_code_str5 != '':
+			time.sleep(1)
+			print('走到了第5秒')
 			dto5.ts_code = ts_code_str0
 			dto5.end_date = today_formatted
 			dto5.start_date = today_formatted
-			getStockFactorFromThreeDB(dto5)
+			# getStockFactorFromThreeDB(dto5)
 		return print("getStockListFromDB---success===>")
 	print("getStockListFromDB---error===>")
 
