@@ -30,7 +30,7 @@ async def getStockQuoteByType(qutationRequeat: QutationDTO, db: Session = Depend
 async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get_db)):
 	#获取股票行情数据
 	print("qutationRequeat===>",qutationRequeat)
-	df = stockService.get_stk_factor(qutationRequeat.ts_code+'.SZ', qutationRequeat.start_date, qutationRequeat.end_date)
+	df = stockService.get_stk_factor(qutationRequeat.ts_code, qutationRequeat.start_date, qutationRequeat.end_date)
 	print(df)
 	if df is not None:
 		dataArray = np.array(df).tolist()
@@ -41,9 +41,14 @@ async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get
 @router.get("/history")
 async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Query(None, alias="from"), to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
 	#获取股票行情数据
+	# 如果参数不合法，结束
+	if int(from_) < 0:
+		return
 	from_ = datetime.fromtimestamp(int(from_))
 	to = datetime.fromtimestamp(int(to))
-	dbData = stockRepo.get_history(symbol, from_, to,resolution, db)
+	# dbData = stockRepo.get_history(symbol, from_, to,resolution, db)
+	# 改为factor库中查询数据
+	dbData = stockRepo.get_history_from_factor(symbol, from_, to,resolution, db)
 	print("history-dbData====>",dbData)
 	print("history-type====>",type(dbData))
 	# print("history-value====>", dbData['trade_date'])
