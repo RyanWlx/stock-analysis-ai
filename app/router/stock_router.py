@@ -12,6 +12,7 @@ from app.dependencies.db_depend import get_db
 from sqlalchemy.orm import Session
 from app.config.log_config import logger
 import app.repository.stock_repo as stockRepo
+from app.service.job_service import data_save
 
 router = APIRouter(tags=["stock_router"])
 
@@ -210,7 +211,10 @@ async def getSymbolInfo(symbol: Union[str, None] = None, db: Session = Depends(g
 async def getStockQuoteHistory():
 	return myResponse.resp_200(message="获取成功",data='')
 
-
+@router.get("/runJob")
+async def getStockQuoteHistory():
+	data_save()
+	return myResponse.resp_200(message="获取成功",data='')
 
 @router.get("/search")
 async def search(query: str, type: str, exchange: str, limit: Union[str, None],db: Session = Depends(get_db)):

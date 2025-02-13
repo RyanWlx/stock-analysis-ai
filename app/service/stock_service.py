@@ -1,3 +1,5 @@
+import numpy as np
+
 from app.config.tushare_config import pro
 from app.models import models as mod
 from sqlalchemy.orm import Session
@@ -193,7 +195,19 @@ def save_stk_factor(type: str, data: [], db: Session):
 		db_stk_factor.boll_mid = item[32]
 		db_stk_factor.boll_lower = item[33]
 		db_stk_factor.cci = item[34]
+		cleaned_data = replace_nan_with_none(db_stk_factor)
 		# 保存数据
-		db.add(db_stk_factor)
+		print('=====>insertDB,', db_stk_factor.ts_code)
+		db.add(cleaned_data)
 		db.commit()
 		db.refresh(db_stk_factor)
+
+def replace_nan_with_none(data):
+	if isinstance(data, dict):
+		return {k: replace_nan_with_none(v) for k, v in data.items()}
+	elif isinstance(data, (list, tuple)):
+		return type(data)(replace_nan_with_none(x) for x in data)
+	elif isinstance(data, float) and np.isnan(data):
+		return None
+	else:
+		return data

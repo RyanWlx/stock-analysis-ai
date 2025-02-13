@@ -58,87 +58,88 @@ def getStockListFromDB( db: Session = next(get_db())):
 					ts_code_str0 = ts_code_str0 + dataArray[index][0] + ''
 				else:
 					ts_code_str0 = ts_code_str0 + dataArray[index][0] + ','
-			elif 999 < index < 2000:
-				if index == 1999 or index == len(dataArray) -1:
-					ts_code_str1 = ts_code_str1 + dataArray[index][0] + ''
-				else:
-					ts_code_str1 = ts_code_str1 + dataArray[index][0] + ','
-			elif 1999 < index < 3000:
-				if index == 2999 or index == len(dataArray) -1:
-					ts_code_str2 = ts_code_str2 + dataArray[index][0] + ''
-				else:
-					ts_code_str2 = ts_code_str2 + dataArray[index][0] + ','
-			elif 2999 < index < 4000:
-				if index == 3999 or index == len(dataArray) -1:
-					ts_code_str3 = ts_code_str3 + dataArray[index][0] + ''
-				else:
-					ts_code_str3 = ts_code_str3 + dataArray[index][0] + ','
-			elif 3999 < index < 5000:
-				if index == 4999 or index == len(dataArray) -1:
-					ts_code_str4 = ts_code_str4 + dataArray[index][0] + ''
-				else:
-					ts_code_str4 = ts_code_str4 + dataArray[index][0] + ','
-			elif 4999 < index < 6000:
-				if index == 5999 or index == len(dataArray) -1:
-					ts_code_str5 = ts_code_str5 + dataArray[index][0] + ''
-				else:
-					ts_code_str5 = ts_code_str5 + dataArray[index][0] + ','
+			# elif 999 < index < 2000:
+			# 	if index == 1999 or index == len(dataArray) -1:
+			# 		ts_code_str1 = ts_code_str1 + dataArray[index][0] + ''
+			# 	else:
+			# 		ts_code_str1 = ts_code_str1 + dataArray[index][0] + ','
+			# elif 1999 < index < 3000:
+			# 	if index == 2999 or index == len(dataArray) -1:
+			# 		ts_code_str2 = ts_code_str2 + dataArray[index][0] + ''
+			# 	else:
+			# 		ts_code_str2 = ts_code_str2 + dataArray[index][0] + ','
+			# elif 2999 < index < 4000:
+			# 	if index == 3999 or index == len(dataArray) -1:
+			# 		ts_code_str3 = ts_code_str3 + dataArray[index][0] + ''
+			# 	else:
+			# 		ts_code_str3 = ts_code_str3 + dataArray[index][0] + ','
+			# elif 3999 < index < 5000:
+			# 	if index == 4999 or index == len(dataArray) -1:
+			# 		ts_code_str4 = ts_code_str4 + dataArray[index][0] + ''
+			# 	else:
+			# 		ts_code_str4 = ts_code_str4 + dataArray[index][0] + ','
+			# elif 4999 < index < 6000:
+			# 	if index == 5999 or index == len(dataArray) -1:
+			# 		ts_code_str5 = ts_code_str5 + dataArray[index][0] + ''
+			# 	else:
+			# 		ts_code_str5 = ts_code_str5 + dataArray[index][0] + ','
 
 		# 获取当前日期
-		current_date = datetime.now().date()
+		current_date = datetime.now().date() + timedelta(-1)
 		# 将日期格式化为YYYYMMDD
 		today_formatted = current_date.strftime('%Y%m%d')
 		print("today_formatted",today_formatted)
 		# 对股票列表进行当天数据的拉取
 		# 调用具体方法执行
 		dto0 = StockClass()
-		dto1 = StockClass()
-		dto2 = StockClass()
-		dto3 = StockClass()
-		dto4 = StockClass()
-		dto5 = StockClass()
+		# dto1 = StockClass()
+		# dto2 = StockClass()
+		# dto3 = StockClass()
+		# dto4 = StockClass()
+		# dto5 = StockClass()
 
 		if ts_code_str0 != '':
 			print('走到了第0秒')
+			print(ts_code_str0)
 			dto0.ts_code = ts_code_str0
 			dto0.end_date = today_formatted
 			dto0.start_date = today_formatted
 			getStockFactorFromThreeDB(dto0)
-		if ts_code_str1 != '':
-			time.sleep(1)
-			print('走到了第1秒')
-			dto1.ts_code = ts_code_str0
-			dto1.end_date = today_formatted
-			dto1.start_date = today_formatted
-			getStockFactorFromThreeDB(dto1)
-		if ts_code_str2 != '':
-			time.sleep(2)
-			print('走到了第2秒')
-			dto2.ts_code = ts_code_str0
-			dto2.end_date = today_formatted
-			dto2.start_date = today_formatted
-			getStockFactorFromThreeDB(dto2)
-		if ts_code_str3 != '':
-			time.sleep(3)
-			print('走到了第3秒')
-			dto3.ts_code = ts_code_str0
-			dto3.end_date = today_formatted
-			dto3.start_date = today_formatted
-			getStockFactorFromThreeDB(dto3)
-		if ts_code_str4 != '':
-			time.sleep(4)
-			print('走到了第4秒')
-			dto4.ts_code = ts_code_str0
-			dto4.end_date = today_formatted
-			dto4.start_date = today_formatted
-			getStockFactorFromThreeDB(dto4)
-		if ts_code_str5 != '':
-			time.sleep(5)
-			print('走到了第5秒')
-			dto5.ts_code = ts_code_str0
-			dto5.end_date = today_formatted
-			dto5.start_date = today_formatted
-			getStockFactorFromThreeDB(dto5)
+		# if ts_code_str1 != '':
+		# 	time.sleep(1)
+		# 	print('走到了第1秒')
+		# 	dto1.ts_code = ts_code_str0
+		# 	dto1.end_date = today_formatted
+		# 	dto1.start_date = today_formatted
+		# 	getStockFactorFromThreeDB(dto1)
+		# if ts_code_str2 != '':
+		# 	time.sleep(2)
+		# 	print('走到了第2秒')
+		# 	dto2.ts_code = ts_code_str0
+		# 	dto2.end_date = today_formatted
+		# 	dto2.start_date = today_formatted
+		# 	getStockFactorFromThreeDB(dto2)
+		# if ts_code_str3 != '':
+		# 	time.sleep(3)
+		# 	print('走到了第3秒')
+		# 	dto3.ts_code = ts_code_str0
+		# 	dto3.end_date = today_formatted
+		# 	dto3.start_date = today_formatted
+		# 	getStockFactorFromThreeDB(dto3)
+		# if ts_code_str4 != '':
+		# 	time.sleep(4)
+		# 	print('走到了第4秒')
+		# 	dto4.ts_code = ts_code_str0
+		# 	dto4.end_date = today_formatted
+		# 	dto4.start_date = today_formatted
+		# 	getStockFactorFromThreeDB(dto4)
+		# if ts_code_str5 != '':
+		# 	time.sleep(5)
+		# 	print('走到了第5秒')
+		# 	dto5.ts_code = ts_code_str0
+		# 	dto5.end_date = today_formatted
+		# 	dto5.start_date = today_formatted
+		# 	getStockFactorFromThreeDB(dto5)
 		return print("getStockListFromDB---success===>")
 	print("getStockListFromDB---error===>")
 
