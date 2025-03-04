@@ -167,8 +167,12 @@ def get_stock_list_all(db: Session) -> secumain:
     """
     根据股票代码全称查询股票代码列表
     """
-    stsm = (select(secumain.full_code).
-			filter(or_(secumain.suffix == '.SZ', secumain.suffix == '.SH', secumain.suffix == '.BJ')))
+    stsm = (select(secumain.full_code).filter(and_(
+	               or_(secumain.listed_sector == 1, secumain.listed_sector == 6, secumain.listed_sector == 7, secumain.listed_sector == 8),
+                   or_(secumain.listed_state == 1, secumain.listed_state == 3, secumain.listed_state == 9),
+                   or_(secumain.secu_category == 1, secumain.secu_category == 3, secumain.secu_category == 51),
+                   or_(secumain.suffix == '.BJ', secumain.suffix == '.SZ', secumain.suffix == '.SH'))))
+			# filter(or_(secumain.suffix == '.SZ', secumain.suffix == '.SH', secumain.suffix == '.BJ')))
 
     result = db.execute(stsm)
     return result.all()

@@ -10,7 +10,7 @@ from datetime import datetime
 scheduler = AsyncIOScheduler()
 
 # 定义定时任务执行器
-@scheduler.scheduled_job('cron', hour=16, minute=45, id='data_save')
+@scheduler.scheduled_job('cron', hour=10, minute=57, id='data_save')
 def my_job():
     # 执行数据拉取和保存逻辑
     logger.info("start a job")
