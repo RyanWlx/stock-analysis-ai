@@ -45,7 +45,7 @@ for item in RegisterRouterList:
 async def on_startup():
     logger.info('start event!')
     # scheduler.start()
-    # data_save()
+    data_save()
 
 # 启动uvicorn服务，默认端口8000
 if __name__ == '__main__':
