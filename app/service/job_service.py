@@ -109,7 +109,7 @@ def getStockListFromDB( db: Session = next(get_db())):
 			dto0.ts_code = ','.join(ts_code_str0)
 			dto0.end_date = today_formatted
 			dto0.start_date = today_formatted
-			# getStockFactorFromThreeDB(dto0)
+			getStockFactorFromThreeDB(dto0)
 		if ts_code_str1 != '':
 			time.sleep(1)
 			print('走到了第1秒')
