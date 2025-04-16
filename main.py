@@ -7,10 +7,11 @@ from app.service.job_service import data_save
 from app.config.log_config import logger
 from datetime import datetime
 
-scheduler = AsyncIOScheduler()
+
+scheduler = AsyncIOScheduler(timezone='Asia/Shanghai')
 
 # 定义定时任务执行器
-@scheduler.scheduled_job('cron', hour=10, minute=57, id='data_save')
+@scheduler.scheduled_job('cron', hour=17, minute=54, id='data_save')
 def my_job():
     # 执行数据拉取和保存逻辑
     logger.info("start a job")
