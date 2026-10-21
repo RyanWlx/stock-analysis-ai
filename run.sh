@@ -103,7 +103,7 @@ exec_start(){
         echo_yellow "${PY_FILE} running. "
         exit 1
     else
-        nohup python3 $RUN_SKY $RUN_OPTIONS $BASE_PATH/$PY_FILE  $RUN_PARAMS > ../logs/$LOG_FILE 2>&1 &
+        nohup python3  ./main.py > ../logs/run.log 2>&1 &
     fi
 
     echo_blue "${PY_FILE} -----------启动------------"

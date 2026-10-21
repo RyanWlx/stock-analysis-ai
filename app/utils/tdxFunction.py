@@ -83,8 +83,15 @@ def DMA(S, A):            #求S的动态移动平均，A作平滑因子,必须 0
     for i in range(1,len(S)): Y[i]=A[i]*S[i]+(1-A[i])*Y[i-1]      #A支持序列 by jqz1226         
     return Y             
   
-def AVEDEV(S, N):         #平均绝对偏差  (序列与其平均值的绝对差的平均值)   
-    return pd.Series(S).rolling(N).apply(lambda x: (np.abs(x - x.mean())).mean()).values 
+def AVEDEV(S, N):         #平均绝对偏差  (序列与其平均值的绝对差的平均值)
+    # 向量化实现（等价于 rolling(N).apply 求窗口内平均绝对偏差），大幅提速 CCI
+    s = np.asarray(S, dtype=float)
+    n = len(s)
+    out = np.full(n, np.nan)
+    if n >= N:
+        win = np.lib.stride_tricks.sliding_window_view(s, N)
+        out[N - 1:] = np.abs(win - win.mean(axis=1, keepdims=True)).mean(axis=1)
+    return out
 
 def SLOPE(S, N):          #返S序列N周期回线性回归斜率            
     return pd.Series(S).rolling(N).apply(lambda x: np.polyfit(range(N),x,deg=1)[0],raw=True).values

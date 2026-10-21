@@ -340,3 +340,13 @@ cython_debug/
 /.idea/vcs.xml
 /.idea/jupyter-settings.xml
 /logs/**
+
+### 本地调试/临时脚本（含数据库密码，禁止入库）
+_*.py
+_*.txt
+_*.log
+sync_*.log
+.workbuddy/
+venv/
+__pycache__/
+*.pyc

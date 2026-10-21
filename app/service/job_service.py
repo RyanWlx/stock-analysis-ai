@@ -1,7 +1,6 @@
 import time
 
 from app.config.log_config import logger
-import app.router.stock_router as stock_router
 from app.service import stock_service as stockService
 from app.parameter.request.qutationRequest import QutationDTO,StockClass
 from fastapi import APIRouter, Depends, Query
@@ -149,5 +148,20 @@ def getStockListFromDB( db: Session = next(get_db())):
 	print("getStockListFromDB---error===>")
 
 def data_save():
-    logger.info("保存数据至数据库")
-    getStockListFromDB()
+    """每日 17:10 定时任务入口。
+
+    原实现走 Tushare（getStockListFromDB），因 Tushare 限速已停用。
+    现改为从同花顺抓取「当天」行情，填充 tb_daliy 与 tb_stk_factor 两张表。
+    具体逻辑见 app/service/ths_daily_sync.py（含复权价、技术指标、幂等写入）。
+    """
+    logger.info("保存数据至数据库（同花顺当天行情 -> tb_daliy / tb_stk_factor）")
+    try:
+        from app.service.ths_daily_sync import sync_daily
+        summary = sync_daily()
+        if summary.get('error'):
+            logger.error(f"每日行情同步未完成: {summary.get('error')}")
+        else:
+            logger.info(f"每日行情同步完成: {summary}")
+    except Exception as e:
+        logger.exception(f"每日行情同步失败: {e}")
+    # 旧的 Tushare 方式（已停用）: getStockListFromDB()
