@@ -37,7 +37,7 @@ LOCAL = dict(
     host=os.environ.get('THS_SYNC_DB_HOST', 'localhost'),
     port=int(os.environ.get('THS_SYNC_DB_PORT', '3306')),
     user=os.environ.get('THS_SYNC_DB_USER', 'root'),
-    password=os.environ.get('THS_SYNC_DB_PASSWORD', 'wlx123'),
+    password=os.environ.get('LOCAL_DB_PASSWORD', ''),
     database=os.environ.get('THS_SYNC_DB_DB', 'stock_int'),
     charset='utf8mb4', connect_timeout=20,
 )
@@ -90,7 +90,7 @@ def ensure_staging(lconn):
         "  trade_date DATETIME NOT NULL,"
         "  turnover_rate DECIMAL(12,4) DEFAULT NULL,"
         "  PRIMARY KEY (ts_code, trade_date)"
-        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
     )
     lconn.commit()
     cur.close()
@@ -143,7 +143,10 @@ def pull_and_stage(lconn, rconn, valid_codes, sec_map, dry_run):
             if not suf:
                 continue
             ts_code = sec_code + suf
-            if ts_code not in sec_map:   # 仅保留 tb_daliy 真实存在的标的（过滤债券/基金等）
+            # 注意：sec_map 的 key 是「不带后缀的6位代码」，value 才是完整 ts_code。
+            # 因此必须用 sec_code 查 key，再校验拼出的 ts_code 与之一致；
+            # 这样既能过滤非目标标的（债券/基金/老三板等），也能校验交易所后缀无误。
+            if sec_map.get(sec_code) != ts_code:
                 continue
             if td_date is None or tr is None:
                 continue
@@ -206,8 +209,14 @@ def check_fill(lconn):
     cur.execute("SELECT COUNT(*), "
                 "SUM(turnover_rate IS NOT NULL), SUM(turnover_rate_f IS NOT NULL) FROM tb_daliy")
     total, tr, trf = cur.fetchone()
-    print(f'[填充率] tb_daliy 总行数 {total}，turnover_rate 非空 {tr}（{100.0 * tr / total:.1f}%），'
-          f'turnover_rate_f 非空 {trf}（{100.0 * trf / total:.1f}%）')
+    # SUM()/COUNT() 在 pymysql 下返回 Decimal，需转 float/int 才能做算术与格式化
+    total = int(total or 0)
+    tr = float(tr or 0)
+    trf = float(trf or 0)
+    pct = (100.0 * tr / total) if total else 0.0
+    pctf = (100.0 * trf / total) if total else 0.0
+    print(f'[填充率] tb_daliy 总行数 {total}，turnover_rate 非空 {int(tr)}（{pct:.1f}%），'
+          f'turnover_rate_f 非空 {int(trf)}（{pctf:.1f}%）')
     cur.execute("SELECT MIN(trade_date), MAX(trade_date) FROM tb_daliy WHERE turnover_rate IS NOT NULL")
     print('          turnover_rate 日期范围:', cur.fetchone())
     cur.close()
@@ -237,9 +246,13 @@ def main():
 
         rconn = get_remote_db()
         try:
-            pull_and_stage(lconn, rconn, valid_codes, sec_map, args.dry_run)
+            pulled, staged = pull_and_stage(lconn, rconn, valid_codes, sec_map, args.dry_run)
         finally:
             rconn.close()
+
+        if pulled == 0:
+            # 命中 0 行通常意味着代码映射或远程查询有误；此时回填会把 tb_daliy 置空，必须中止
+            raise SystemExit('[中止] 远程拉取命中 0 行，疑似 ts_code/sec_code 映射或查询语句异常，已跳过回填')
 
         update_join(lconn, args.dry_run)
         check_fill(lconn)
