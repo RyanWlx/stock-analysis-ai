@@ -1,3 +1,6 @@
+from app.config.env_config import load_env
+load_env()
+
 import uvicorn
 from fastapi import FastAPI
 from app.router import RegisterRouterList

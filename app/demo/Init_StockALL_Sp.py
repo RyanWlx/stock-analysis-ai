@@ -1,4 +1,5 @@
 import datetime
+import os
 import pymysql
 from app.config.tushare_config import pro
 from app.config.log_config import logger
@@ -9,7 +10,15 @@ if __name__ == '__main__':
     time_temp = datetime.datetime.now() - datetime.timedelta(days=1)
     end_dt = time_temp.strftime('%Y%m%d')
     # 建立数据库连接,剔除已入库的部分
-    db = pymysql.connect(host='rm-uf62xspc9k7yy9kw9zo.mysql.rds.aliyuncs.com', user='soosoo_dev', passwd='Initial11', db='stock_int', charset='utf8')
+    # 本地 MySQL（原 RDS 已弃用）。可用环境变量 THS_SYNC_DB_* 覆盖。
+    db = pymysql.connect(
+        host=os.getenv('THS_SYNC_DB_HOST', 'localhost'),
+        port=int(os.getenv('THS_SYNC_DB_PORT', '3306')),
+        user=os.getenv('THS_SYNC_DB_USER', 'root'),
+        passwd=os.getenv('THS_SYNC_DB_PASSWORD', 'wlx123'),
+        db=os.getenv('THS_SYNC_DB_DB', 'stock_int'),
+        charset='utf8',
+    )
     cursor = db.cursor()
     # 设定需要获取数据的股票池
     stock_pool = ['300666.SZ','300618.SZ','002049.SZ','300672.SZ','600600.SH','689009.SH']

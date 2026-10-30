@@ -20,7 +20,7 @@ router = APIRouter(tags=["charts_router"])
 2:图表编辑保存：/charts?client=client_id&user=user_id&chart=chart_id
 '''
 @router.post("/1.1/charts")
-async def postCharts(client: Union[str|None] = Query(), user: Union[str|None] = Query(), chart: Union[str|None] = Query(), name: str = Form(), content: str = Form(), symbol: str = Form(), resolution: str = Form(), Session = Depends(get_db)):
+async def postCharts(client: Union[str|None] = Query(default=None), user: Union[str|None] = Query(default=None), chart: Union[str|None] = Query(default=None), name: str = Form(), content: str = Form(), symbol: str = Form(), resolution: str = Form(), Session = Depends(get_db)):
 	#校验数据
 	if not client:
 		return myResponse.resp_400(message="client不能为空")
@@ -46,7 +46,7 @@ async def postCharts(client: Union[str|None] = Query(), user: Union[str|None] = 
 		myChart = chartRepo.save_charts(myChart, Session)
 		if myChart is not None:
 			return myResponse.resp_tdview_200(message="charts保存成功", data={'status': 'ok', 'id': myChart.id})
-		return myResponse.resp_tdview_200(message="保存用户图表失败", data={'status': 'error', 'id': null})
+		return myResponse.resp_tdview_200(message="保存用户图表失败", data={'status': 'error', 'id': None})
 
 
 
@@ -56,7 +56,7 @@ charts_storage_url/charts_storage_api_version/charts?client=client_id&user=user_
 ep:https://saveload.tradingview.com/1.1/charts?client=tradingview.com&user=public_user_id
 '''
 @router.get("/1.1/charts")
-async def getCharts(client: Union[str|None] = Query(), user: Union[str|None] = Query(), chart: Union[str|None] = Query(default=None), Session = Depends(get_db)):
+async def getCharts(client: Union[str|None] = Query(default=None), user: Union[str|None] = Query(default=None), chart: Union[str|None] = Query(default=None), Session = Depends(get_db)):
 	#校验数据
 	if not client:
 		return myResponse.resp_400(message="client不能为空", data=client)
@@ -88,7 +88,7 @@ async def getCharts(client: Union[str|None] = Query(), user: Union[str|None] = Q
 图标删除接口
 '''
 @router.delete("/1.1/charts")
-async def deleteCharts(client: Union[str|None] = Query(), user: Union[str|None] = Query(), chart: Union[str|None] = Query(), Session = Depends(get_db)):
+async def deleteCharts(client: Union[str|None] = Query(default=None), user: Union[str|None] = Query(default=None), chart: Union[str|None] = Query(default=None), Session = Depends(get_db)):
 	#校验数据
 	if not client:
 		return myResponse.resp_400(message="client不能为空", data=client)

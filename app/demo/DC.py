@@ -1,4 +1,5 @@
 # -*- coding:utf8 -*-
+import os
 import numpy as np
 import pymysql
 
@@ -10,8 +11,15 @@ class data_collect(object):
 
     def collectDATA(self,in_code,start_dt,end_dt):
         # 建立数据库连接，获取日线基础行情(开盘价，收盘价，最高价，最低价，成交量，成交额)
-        db = pymysql.connect(host='rm-uf62xspc9k7yy9kw9zo.mysql.rds.aliyuncs.com', user='soosoo_dev',
-                             passwd='Initial11', db='stock_int', charset='utf8')
+        # 本地 MySQL（原 RDS 已弃用）。可用环境变量 THS_SYNC_DB_* 覆盖。
+        db = pymysql.connect(
+            host=os.getenv('THS_SYNC_DB_HOST', 'localhost'),
+            port=int(os.getenv('THS_SYNC_DB_PORT', '3306')),
+            user=os.getenv('THS_SYNC_DB_USER', 'root'),
+            passwd=os.getenv('THS_SYNC_DB_PASSWORD', 'wlx123'),
+            db=os.getenv('THS_SYNC_DB_DB', 'stock_int'),
+            charset='utf8',
+        )
         cursor = db.cursor()
         sql_done_set = "SELECT * FROM tb_daliy a where ts_code = '%s' and trade_date >= '%s' and trade_date <= '%s' order by trade_date asc" % (in_code, start_dt, end_dt)
         cursor.execute(sql_done_set)

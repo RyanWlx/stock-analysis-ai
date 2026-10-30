@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, DECIMAL, DateTime, Index, Integer, String, Table, text
+from sqlalchemy import BigInteger, Column, DECIMAL, DateTime, Index, Integer, String, Table, Text, text
 from sqlalchemy.dialects.mysql import TINYINT, VARCHAR
 from sqlalchemy.orm import declarative_base
 import uuid
@@ -221,3 +221,26 @@ class TbWeekly(Base):
     pct_change = Column(DECIMAL(24, 6), comment='涨跌幅(未复权)')
     vol = Column(DECIMAL(24, 6), comment='成交量(手)')
     amount = Column(DECIMAL(24, 6), comment='成交额(千元)')
+
+
+class TbMark(Base):
+    __tablename__ = 'tb_marks'
+    __table_args__ = (
+        Index('idx_marks_code_time', 'ts_code', 'mark_time'),
+        Index('idx_marks_kind', 'mark_kind'),
+        {'comment': '图表标记(TradingView getMarks/getTimescaleMarks)'}
+    )
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True, comment='id')
+    ts_code = Column(String(90), nullable=False, comment='股票代码(带后缀)')
+    mark_time = Column(DateTime, nullable=False, comment='标记时间(对应K线bar时间)')
+    mark_kind = Column(String(20), nullable=False, server_default=text("'bar'"), comment='标记类型: bar/timescale')
+    mark_type = Column(String(50), comment='业务类型: dividend/earnings/split/lockup/custom 等')
+    color = Column(String(50), comment='颜色')
+    label = Column(String(10), comment='标签')
+    label_font_color = Column(String(50), comment='标签字体颜色')
+    text = Column(String(500), comment='悬浮文本(bar标记)')
+    tooltip = Column(Text, comment='时间轴标记多行提示(JSON数组)')
+    min_size = Column(Integer, comment='最小显示尺寸')
+    created_time = Column(DateTime, comment='创建时间')
+    updated_time = Column(DateTime, comment='更新时间')

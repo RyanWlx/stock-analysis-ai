@@ -1,6 +1,7 @@
 #导入models中的Tbdaliy模型，生成数据写入方法
 from sqlalchemy import and_
 from app.models.models import TbDaliy
+from app.models.models import TbMark
 from app.models.stock_model import Daliy as daliy
 from app.models.stock_model import Secumain as secumain
 from app.models.models import TbWeekly
@@ -176,3 +177,69 @@ def get_stock_list_all(db: Session) -> secumain:
 
     result = db.execute(stsm)
     return result.all()
+
+
+def get_marks(symbol, from_, to, resolution, db: Session):
+    """
+    K线标记（TradingView getMarks）
+    """
+    return db.query(TbMark).filter(
+        or_(
+            TbMark.ts_code == symbol + '.SZ',
+            TbMark.ts_code == symbol + '.SH',
+            TbMark.ts_code == symbol + '.BJ',
+        ),
+        TbMark.mark_kind == 'bar',
+    ).filter(TbMark.mark_time > from_).filter(TbMark.mark_time < to).all()
+
+
+def get_timescale_marks(symbol, from_, to, resolution, db: Session):
+    """
+    时间轴标记（TradingView getTimescaleMarks）
+    """
+    return db.query(TbMark).filter(
+        or_(
+            TbMark.ts_code == symbol + '.SZ',
+            TbMark.ts_code == symbol + '.SH',
+            TbMark.ts_code == symbol + '.BJ',
+        ),
+        TbMark.mark_kind == 'timescale',
+    ).filter(TbMark.mark_time > from_).filter(TbMark.mark_time < to).all()
+
+
+def get_history_weekly(symbol, from_, to, countback, db: Session):
+    """
+    周线历史（TradingView /history，resolution=W/3W）。
+    支持 countback：返回「trade_date <= to」的最近 N 根（升序），优先级高于 from。
+    """
+    return _get_period_bars(TbWeekly, symbol, from_, to, countback, db)
+
+
+def get_history_monthly(symbol, from_, to, countback, db: Session):
+    """
+    月线历史（TradingView /history，resolution=M/6M）。
+    支持 countback：返回「trade_date <= to」的最近 N 根（升序），优先级高于 from。
+    """
+    return _get_period_bars(TbMonthly, symbol, from_, to, countback, db)
+
+
+def _get_period_bars(model, symbol, from_, to, countback, db: Session):
+    """
+    按周期表（周线/月线）查询 K 线，字段与日线 /history 对齐（open/high/low/close/vol）。
+    countback 存在(>0)时：取 trade_date <= to 的最近 countback 根，倒序取前 N 再反转为升序，忽略 from；
+    否则：取 (from, to) 开区间内数据，升序。
+    """
+    q = db.query(model).filter(or_(
+        model.ts_code == symbol + '.SZ',
+        model.ts_code == symbol + '.SH',
+        model.ts_code == symbol + '.BJ',
+    ))
+    if countback and countback > 0:
+        rows = q.filter(model.trade_date <= to)\
+                .order_by(model.trade_date.desc())\
+                .limit(countback).all()
+        rows = list(reversed(rows))
+        return rows
+    return q.filter(model.trade_date > from_)\
+            .filter(model.trade_date < to)\
+            .order_by(model.trade_date.asc()).all()

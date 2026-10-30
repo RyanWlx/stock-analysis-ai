@@ -46,6 +46,9 @@ from sqlalchemy.engine.url import make_url
 
 from app.utils import tdxFunction as tdx
 from app.config.log_config import logger
+from app.config.env_config import load_env
+
+load_env()  # 加载项目根目录 .env（本地凭证，勿提交），保证远程同花顺源库密码可用
 
 # ==================== 远程同花顺库 ====================
 REMOTE = dict(

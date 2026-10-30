@@ -40,20 +40,24 @@ async def getStockFactor(qutationRequeat: QutationDTO, db: Session = Depends(get
 	return myResponse.resp_200(message="行情数据不存在",data='')
 
 @router.get("/history")
-async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Query(None, alias="from"), to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
-	#获取股票行情数据
-	# 如果参数不合法，结束
-	if int(from_) < 0:
-		return
-	from_ = datetime.fromtimestamp(int(from_))
-	to = datetime.fromtimestamp(int(to))
-	# dbData = stockRepo.get_history(symbol, from_, to,resolution, db)
-	# 改为factor库中查询数据
-	dbData = stockRepo.get_history_from_factor(symbol, from_, to,resolution, db)
-	print("history-dbData====>",dbData)
-	print("history-type====>",type(dbData))
-	# print("history-value====>", dbData['trade_date'])
-	if dbData is not None:
+async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Query(None, alias="from"), to: Union[str, None] = None, resolution: Union[str, None] = None, countback: Union[int, None] = Query(None), db: Session = Depends(get_db)):
+	#获取股票行情数据（TradingView UDF /history）
+	# resolution: D/2D/3D -> 日线(tb_stk_factor)；W/3W -> 周线(tb_weekly)；M/6M -> 月线(tb_monthly)
+	# countback: 返回以 to 为终点的最近 N 根 bar，优先级高于 from（TradingView 语义，from 可忽略）
+	if symbol is None or to is None:
+		return myResponse.resp_tdview_200(message="参数缺失", data={"s": "no_data", "t": [], "c": [], "o": [], "h": [], "l": [], "v": []})
+	to_dt = datetime.fromtimestamp(int(to))
+	from_dt = datetime.fromtimestamp(int(from_)) if from_ is not None else None
+	# 按 resolution 分发到 日线/周线/月线
+	if resolution in ('W', '3W'):
+		dbData = stockRepo.get_history_weekly(symbol, from_dt, to_dt, countback, db)
+	elif resolution in ('M', '6M'):
+		dbData = stockRepo.get_history_monthly(symbol, from_dt, to_dt, countback, db)
+	else:
+		if from_dt is None:
+			from_dt = datetime(1990, 1, 1)  # countback 场景下日线兜底（A股最早交易日之前）
+		dbData = stockRepo.get_history_from_factor(symbol, from_dt, to_dt, resolution, db)
+	if dbData:
 		t = []
 		h = []
 		c = []
@@ -61,7 +65,6 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Quer
 		l = []
 		v = []
 		for element in dbData:
-			print(element)
 			t.append(int(element.trade_date.timestamp()))
 			h.append(element.high)
 			c.append(element.close)
@@ -78,10 +81,9 @@ async def getStockQuoteHistory(symbol: Union[str, None] = None, from_: str= Quer
 			"v": v,
 			"s": 'ok'
 		}
-		print("history-_data====>", h)
-		logger.info("数据获取成功: {}", dbData, _data)
+		logger.info("数据获取成功: {}", _data)
 		return myResponse.resp_tdview_200(data = _data, message="获取成功")
-	return myResponse.resp_tdview_200(message="不存在", data='')
+	return myResponse.resp_tdview_200(message="不存在", data={"s": "no_data", "t": [], "c": [], "o": [], "h": [], "l": [], "v": []})
 
 @router.get("/config")
 async def getChartConfig():
@@ -235,3 +237,50 @@ async def search(query: str, type: str, exchange: str, limit: Union[str, None],d
 		print("search-_data====>", _list)
 		return myResponse.resp_tdview_200(data=_list, message="获取成功")
 	return myResponse.resp_tdview_200(message="不存在", data=[])
+
+@router.get("/marks")
+async def getMarks(symbol: Union[str, None] = None, from_: str = Query(None, alias="from"), to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
+	# TradingView getMarks：返回可见范围内的 K 线标记（财报/分红/解禁等）
+	if symbol is None or from_ is None or to is None:
+		return myResponse.resp_tdview_200(message="参数缺失", data=[])
+	from_dt = datetime.fromtimestamp(int(from_))
+	to_dt = datetime.fromtimestamp(int(to))
+	dbData = stockRepo.get_marks(symbol, from_dt, to_dt, resolution, db)
+	_list = []
+	for m in dbData:
+		_list.append({
+			'id': m.id,
+			'time': int(m.mark_time.timestamp()),
+			'color': m.color,
+			'text': m.text,
+			'label': m.label,
+			'labelFontColor': m.label_font_color,
+			'minSize': m.min_size,
+		})
+	return myResponse.resp_tdview_200(data=_list, message="获取成功")
+
+@router.get("/timescale_marks")
+async def getTimescaleMarks(symbol: Union[str, None] = None, from_: str = Query(None, alias="from"), to: Union[str, None] = None, resolution: Union[str, None] = None, db: Session = Depends(get_db)):
+	# TradingView getTimescaleMarks：返回时间轴标记（多行 tooltip）
+	if symbol is None or from_ is None or to is None:
+		return myResponse.resp_tdview_200(message="参数缺失", data=[])
+	from_dt = datetime.fromtimestamp(int(from_))
+	to_dt = datetime.fromtimestamp(int(to))
+	dbData = stockRepo.get_timescale_marks(symbol, from_dt, to_dt, resolution, db)
+	_list = []
+	for m in dbData:
+		tooltip = m.tooltip
+		if isinstance(tooltip, str):
+			try:
+				tooltip = json.loads(tooltip)
+			except Exception:
+				tooltip = [tooltip]
+		_list.append({
+			'id': m.id,
+			'time': int(m.mark_time.timestamp()),
+			'color': m.color,
+			'label': m.label,
+			'minSize': m.min_size,
+			'tooltip': tooltip,
+		})
+	return myResponse.resp_tdview_200(data=_list, message="获取成功")
